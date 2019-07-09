@@ -1,13 +1,10 @@
 
 export * from './base';
-import orderQuery from './order-query';
-import { WxPayStatic } from './base';
-class WxPayBase {
-    mch_id: string;
-    appid: string;
-    key: string;
-    pfxPath: string;
-}
+import { WxPayStatic, WxPayBase, Path } from './base';
+import * as microPay from './micro-pay';
+import * as orderQuery from './order-query';
+import * as downloadBill from './download-bill';
+
 
 export class WxPay extends WxPayBase {
     constructor(opt: WxPayBase) {
@@ -19,20 +16,26 @@ export class WxPay extends WxPayBase {
     }
 
     requestOpt() {
-        return { mch_id: this.mch_id, key: this.key };
+        return { appid: this.appid, mch_id: this.mch_id, key: this.key, pfxPath: this.pfxPath };
     }
 
-    async orderQuery(data: { out_trade_no?: string; transaction_id?: string }) {
-        let rs = await orderQuery({
-            appid: this.appid,
-            mch_id: this.mch_id,
-            out_trade_no: data.out_trade_no,
-            transaction_id: data.transaction_id
-        }, this.requestOpt());
-        if (rs.return_code !== WxPayStatic.success)
-            throw new Error(rs.return_msg);
-        if (rs.result_code !== WxPayStatic.success) {
-            throw new Error(rs.err_code_des);
-        }
+    async microPay(data: microPay.Request) {
+        let obj = await WxPayStatic.getSignObj(data, this.requestOpt());
+        let rs = await WxPayStatic.request<microPay.Response>({ path: Path.microPay, data: obj });
+        return rs;
+    }
+
+    async orderQuery(data: orderQuery.Request) {
+        let obj = await WxPayStatic.getSignObj(data, this.requestOpt());
+        let rs = await WxPayStatic.request<orderQuery.Response>({ path: Path.orderQuery, data: obj });
+        return rs;
+    }
+
+    async downloadBill(data: downloadBill.Request) {
+        if (!data.bill_type)
+            data.bill_type = downloadBill.billType.所有;
+        let obj = await WxPayStatic.getSignObj(data, this.requestOpt());
+        let rs = await WxPayStatic.request<string>({ path: Path.downloadBill, data: obj, });
+        return rs;
     }
 }

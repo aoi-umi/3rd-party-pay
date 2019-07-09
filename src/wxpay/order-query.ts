@@ -1,6 +1,6 @@
-import * as utils from '../utils';
+//https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_2
+
 import * as base from './base';
-import { Path, WxPayStatic } from './base';
 
 export const error = {
 
@@ -18,9 +18,9 @@ export const error = {
         payStatus: '',
     },
 
-}
+};
 
-export class Request extends base.Request {
+export class Request {
     /**
      *微信订单号
      *微信的订单号，建议优先使用
@@ -36,7 +36,7 @@ export class Request extends base.Request {
     out_trade_no?: string
 }
 
-export class Response extends base.Request {
+export class Response extends base.Response {
 
     /**
      *设备号
@@ -194,17 +194,4 @@ export class Response extends base.Request {
      */
     trade_state_desc: string
 
-}
-
-export default async function orderQuery(data: Partial<Request>, opt: base.SignOpt) {
-    let signObj = {
-        appid: data.appid,
-        mch_id: data.mch_id,
-        nonce_str: data.nonce_str || utils.randomString(),
-        out_trade_no: data.out_trade_no, //商户订单号
-        transaction_id: data.transaction_id,
-    };
-    let obj = await WxPayStatic.getSignObj(signObj, opt);
-    let resData = await WxPayStatic.request({ path: Path.orderQuery, data: obj });
-    return resData;
 }

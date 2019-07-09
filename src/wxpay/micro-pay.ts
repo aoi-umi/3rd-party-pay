@@ -1,3 +1,5 @@
+//https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
+
 import * as base from './base';
 export const error = {
     SYSTEMERROR: {
@@ -176,7 +178,7 @@ export const error = {
     },
 };
 
-export class Request extends base.Request {
+export class Request {
     /**
      *设备号
      *终端设备号(商户自定义，如门店编号)

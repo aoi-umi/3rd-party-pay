@@ -27,14 +27,14 @@ export class Request {
      *随机字符串，不长于32位。推荐随机数生成算法
      *example: 5K8264ILTKCH16CQ2502SI8ZNMTM67VS
      */
-    nonce_str: string
+    nonce_str?: string
 
     /**
      *签名
      *签名，详见签名生成算法
      *example: C380BEC2BFD727A4B6845133519F3AD6
      */
-    sign: string
+    sign?: string
 
     /**
      *签名类型
@@ -113,9 +113,16 @@ export class Response {
 }
 export const Path = {
     getSignKey: '/pay/getsignkey',
+    microPay: '/pay/micropay',
     orderQuery: '/pay/orderquery',
+    downloadBill: '/pay/downloadbill',
 }
-export class SignOpt { key?: string }
+export class WxPayBase {
+    mch_id: string;
+    appid: string;
+    key: string;
+    pfxPath: string;
+}
 export class WxPayStatic {
     static sandbox = false;
     static success = 'SUCCESS';
@@ -131,13 +138,15 @@ export class WxPayStatic {
         return jsonBody.xml;
     }
 
-    static async request(opt: {
+    static async request<T = any>(opt: {
         data: any;
         host?: string;
         path: string;
         method?: string;
         pfxPath?: string;
         mch_id?: string;
+        notThrowErr?: boolean;
+        originalResult?: boolean;
     }) {
         let _xml = xmlBuilder.buildObject({ xml: opt.data });
         let reqData: any = {
@@ -153,18 +162,38 @@ export class WxPayStatic {
             }
         }
         let rs = await utils.request(reqData);
-        let xmlStr = rs.data.toString("utf-8");
-        console.log('wxpay return data:\r\n', xmlStr);
-        let xmlRs = await this.parseXml(xmlStr);
-        return xmlRs;
+        // console.log(typeof rs.data)
+        if (opt.originalResult)
+            return rs.data as T;
+        let str = rs.data.toString("utf-8");
+        console.log('wxpay return data:\r\n', str);
+        if (str.startsWith('<xml>')) {
+            let xmlRs: Response = await this.parseXml(str);
+
+            if (!opt.notThrowErr) {
+                this.handleError(xmlRs);
+            }
+
+            return xmlRs as any as T;
+        } else {
+            return str;
+        }
+    }
+
+    static handleError(rs: Response) {
+        if (rs.return_code !== WxPayStatic.success)
+            throw new Error(rs.return_msg);
+        if (rs.result_code && rs.result_code !== WxPayStatic.success) {
+            throw new Error(rs.err_code_des);
+        }
     }
 
     //#region 调用接口 
     //沙箱获取key接口
-    static async getsignkey(data: { mch_id: string; nonce_str?: string; }) {
+    static async getsignkey(data: { mch_id: string; }) {
         let signObj = {
             mch_id: data.mch_id,
-            nonce_str: data.nonce_str || utils.randomString(),
+            nonce_str: utils.randomString(),
         };
         signObj['sign'] = this.createSign(signObj);
         let resData = await this.request({ path: Path.getSignKey, data: signObj });
@@ -180,17 +209,20 @@ export class WxPayStatic {
         return sign;
     }
 
-    static async getSignObj(signObj, opt: SignOpt) {
+    static async getSignObj(signObj, opt: WxPayBase) {
         let key = opt.key;
+        let obj = utils.clone(signObj);
+        obj.mch_id = opt.mch_id;
+        obj.appid = opt.appid;
         if (this.sandbox) {
             let rs = await this.getsignkey({
                 mch_id: signObj.mch_id,
             });
-            if (rs.return_code !== 'SUCCESS')
+            if (rs.return_code !== this.success)
                 throw new Error(rs.return_msg);
             key = rs.sandbox_signkey;
         }
-        let obj = utils.clone(signObj);
+        obj.nonce_str = utils.randomString();
         for (let key in obj) {
             if (obj[key] === undefined)
                 delete obj[key];
