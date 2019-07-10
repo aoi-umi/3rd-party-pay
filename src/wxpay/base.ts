@@ -2,8 +2,10 @@ import * as xml2js from 'xml2js';
 import * as fs from 'fs';
 import * as md5 from 'md5';
 import * as qs from 'query-string';
+import * as https from 'https';
 
 import * as utils from '../utils';
+import { AxiosRequestConfig } from 'axios';
 
 const xmlBuilder = new xml2js.Builder({ headless: true });
 
@@ -116,12 +118,13 @@ export const Path = {
     microPay: '/pay/micropay',
     orderQuery: '/pay/orderquery',
     downloadBill: '/pay/downloadbill',
+    reverse: '/secapi/pay/reverse',
 }
 export class WxPayBase {
     mch_id: string;
     appid: string;
     key: string;
-    pfxPath: string;
+    pfxPath?: string;
 }
 export class WxPayStatic {
     static sandbox = false;
@@ -143,41 +146,40 @@ export class WxPayStatic {
         host?: string;
         path: string;
         method?: string;
-        pfxPath?: string;
-        mch_id?: string;
+        agent?: {
+            pfxPath: string;
+            passphrase: string;
+        };
         notThrowErr?: boolean;
         originalResult?: boolean;
     }) {
         let _xml = xmlBuilder.buildObject({ xml: opt.data });
-        let reqData: any = {
+        let reqData: AxiosRequestConfig = {
             url: (opt.host || this.getHost()) + opt.path,
-            method: opt.method,
+            method: opt.method as any,
             data: _xml,
         };
         console.log('wxpay send data:\r\n', _xml);
-        if (opt.pfxPath) {
-            reqData.agentOptions = {
-                pfx: fs.readFileSync(opt.pfxPath),
-                passphrase: opt.mch_id
-            }
+        if (opt.agent) {
+            reqData.httpsAgent = new https.Agent({
+                pfx: fs.readFileSync(opt.agent.pfxPath),
+                passphrase: opt.agent.passphrase
+            })
         }
         let rs = await utils.request(reqData);
         // console.log(typeof rs.data)
-        if (opt.originalResult)
-            return rs.data as T;
-        let str = rs.data.toString("utf-8");
-        console.log('wxpay return data:\r\n', str);
-        if (str.startsWith('<xml>')) {
-            let xmlRs: Response = await this.parseXml(str);
+        let data = rs.data.toString("utf-8");
+        let isXml = data.startsWith('<xml>');
+        if (!isXml || opt.originalResult)
+            return data as T;
+        console.log('wxpay return data:\r\n', data);
+        let xmlRs: Response = await this.parseXml(data);
 
-            if (!opt.notThrowErr) {
-                this.handleError(xmlRs);
-            }
-
-            return xmlRs as any as T;
-        } else {
-            return str;
+        if (!opt.notThrowErr) {
+            this.handleError(xmlRs);
         }
+
+        return xmlRs as any as T;
     }
 
     static handleError(rs: Response) {

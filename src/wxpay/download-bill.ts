@@ -32,6 +32,29 @@ export class Request {
 
 export class Response extends base.Response { }
 
+export const error = {
+    20003: {
+        code: '20003',
+        msg: {
+            SYSTEMERROR: {
+                desc: '下载失败',
+            }
+        }
+    },
+    20001: {
+
+    },
+    20002: {
+
+    },
+    20007: {
+
+    },
+    20100: {
+
+    },
+};
+
 export const billType = {
     所有: 'ALL',
     成功: 'SUCCESS',

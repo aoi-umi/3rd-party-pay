@@ -2,24 +2,6 @@
 
 import * as base from './base';
 
-export const error = {
-
-    ORDERNOTEXIST: {
-        code: 'ORDERNOTEXIST',
-        desc: '此交易订单号不存在',
-        resolve: '该API只能查提交支付交易返回成功的订单，请商户检查需要查询的订单号是否正确',
-        payStatus: '',
-    },
-
-    SYSTEMERROR: {
-        code: 'SYSTEMERROR',
-        desc: '系统错误',
-        resolve: '系统异常，请再调用发起查询',
-        payStatus: '',
-    },
-
-};
-
 export class Request {
     /**
      *微信订单号
@@ -195,3 +177,21 @@ export class Response extends base.Response {
     trade_state_desc: string
 
 }
+
+export const error = {
+
+    ORDERNOTEXIST: {
+        code: 'ORDERNOTEXIST',
+        desc: '此交易订单号不存在',
+        resolve: '该API只能查提交支付交易返回成功的订单，请商户检查需要查询的订单号是否正确',
+        payStatus: '',
+    },
+
+    SYSTEMERROR: {
+        code: 'SYSTEMERROR',
+        desc: '系统错误',
+        resolve: '系统异常，请再调用发起查询',
+        payStatus: '',
+    },
+
+};
