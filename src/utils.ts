@@ -1,5 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import * as Q from 'q';
+import * as crypto from 'crypto';
+import * as md from 'node-forge/lib/md.all';
+import * as hmac from 'node-forge/lib/hmac';
 
 export function extend(...args) {
     var res = args[0] || {};
@@ -59,4 +62,18 @@ export let promisify = function <T = any>(fn, caller?) {
     if (caller)
         fn = fn.bind(caller);
     return Q.denodeify<T>(fn);
+}
+
+export function encrypt(str: string, type: 'md5' | 'sha256' = 'md5', key?: string) {
+    let encrypt = md.md5;
+    let isHmac = false;
+    if (type == 'sha256') {
+        encrypt = hmac;
+        isHmac = true;
+    }
+    let en = encrypt.create();
+    if (isHmac)
+        en.start(type, key);
+    en.update(str);
+    return en.digest().toHex();
 }

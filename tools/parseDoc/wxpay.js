@@ -32,14 +32,19 @@ async function parse(url) {
         let trs = $(this).find('tr');
         let headers = trs.slice(0, 1).children();
         let colName = [];
+        let skip = false;
         headers.each(function (i) {
             let text = $(this).text().trim();
             if (text.startsWith('-'))
                 text = text.substr(1);
             colName[i] = columnMap[text];
-            if (!colName[i])
-                throw new Error('no match column ' + text);
+            if (!colName[i]) {
+                console.log('no match column ' + text);
+                skip = true;
+            }
         });
+        if (skip)
+            return;
         let dist = {};
         trs.slice(1).each(function (row) {
             let data = {};
@@ -95,17 +100,18 @@ function convertToClass(data, clsName) {
             col.push(`},`);
         } else {
             col.push('/**');
-            col.push(' *' + val.name);
+            col.push(' * ' + val.name);
             col = [...col, ...val.desc.split(returnLine).map(ele => {
-                return ' *' + ele;
+                return ' * ' + ele;
             })];
-            col.push(' *example: ' + val.example);
+            if (val.example)
+                col.push(' * example: ' + val.example);
             col.push(' */');
             col.push(`${val.varName}${val.required == '否' ? '?' : ''}: ${getType(val.type)};`);
         }
         cls.push(col.join('\n'));
     }
-    cls.unshift(isError ? 'let error = {' : `class ${clsName || ''} {`);
+    cls.unshift(isError ? 'export const error = {' : `export class ${clsName || ''} {`);
     cls.push('}');
     return cls.join('\n\n');
 }
