@@ -85,17 +85,17 @@ export class WxPay extends WxPayBase {
     }
 
     async refundNotify(req: string | refundNotify.Request, fn: (req: refundNotify.Request) => refundNotify.Response) {
-        let data: refundNotify.Request;
+        let data = req as refundNotify.Request;
         if (typeof req === 'string') {
             data = await WxPayStatic.parseXml(req);
         }
         let key = utils.encrypt(this.key, 'md5');
-        console.log(key);
         let reqInfo = WxPayStatic.decrypt(key, data.req_info);
-        let obj = await WxPayStatic.parseXml<refundNotify.Request>(reqInfo);
+        let parse = await WxPayStatic.parseXml<{ root: refundNotify.RequestInfo }>(reqInfo, true);
+        data.req_info = parse.root;
         let rs: refundNotify.Response
         try {
-            rs = await fn(obj);
+            rs = await fn(data);
         } catch (e) {
             console.error(e);
             rs = {

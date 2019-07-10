@@ -45,7 +45,7 @@ export class Request {
      * 加密信息请用商户秘钥进行解密，详见解密方式
      * example: 
      */
-    req_info: string | RequestInfo
+    req_info: RequestInfo
 
 }
 

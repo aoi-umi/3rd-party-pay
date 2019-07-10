@@ -145,9 +145,9 @@ export class WxPayStatic {
         return xmlBuilder.buildObject({ xml: data });
     }
 
-    static async parseXml<T = any>(xml: string) {
+    static async parseXml<T = any>(xml: string, root = false) {
         let jsonBody = await utils.promisify(xml2js.parseString)(xml, { explicitArray: false });
-        return jsonBody.xml as T;
+        return (root ? jsonBody : jsonBody.xml) as T;
     }
 
     static async request<T = any>(opt: {
@@ -223,7 +223,7 @@ export class WxPayStatic {
     }) {
         opt = { ...opt };
         let obj = utils.sortObject(signObj);
-        let signStr = qs.stringify(obj);
+        let signStr = qs.stringify(obj, { encode: false });
         signStr += '&key=' + opt.key;
         let sign = utils.encrypt(signStr, opt.encrypt as any, opt.key).toUpperCase();
         return sign;
