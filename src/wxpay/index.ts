@@ -3,16 +3,19 @@ import * as utils from '../utils';
 
 export * from './base';
 import { WxPayStatic, WxPayBase, Path, SignType } from './base';
-import * as microPay from './micro-pay';
+import * as unifiedOrder from './unified-order';
 import * as orderQuery from './order-query';
-import * as reverse from './reverse';
+import * as closeOrder from './close-order';
 import * as refund from './refund';
 import * as refundQuery from './refund-query';
 import * as downloadBill from './download-bill';
-import * as downloadFundflow from './download-fundflow';
+import * as payNotify from './pay-notify';
+import * as microPay from './micro-pay';
+import * as reverse from './reverse';
 import * as authCodeToOpenid from './auth-code-to-openid';
 import * as refundNotify from './refund-notify';
-
+import * as batchQueryComment from './batch-query-comment';
+import * as downloadFundflow from './download-fundflow';
 
 export class WxPay extends WxPayBase {
     constructor(opt: WxPayBase) {
@@ -33,9 +36,9 @@ export class WxPay extends WxPayBase {
 
     //#region 支付接口 
 
-    async microPay(data: microPay.Request) {
+    async unifiedOrder(data: unifiedOrder.Request) {
         let obj = await WxPayStatic.getSignObj(data, this.signOpt());
-        let rs = await WxPayStatic.request<microPay.Response>({ path: Path.microPay, data: obj });
+        let rs = await WxPayStatic.request<unifiedOrder.Response>({ path: Path.unifiedOrder, data: obj });
         return rs;
     }
 
@@ -45,9 +48,9 @@ export class WxPay extends WxPayBase {
         return rs;
     }
 
-    async reverse(data: reverse.Request) {
+    async closeOrder(data: closeOrder.Request) {
         let obj = await WxPayStatic.getSignObj(data, this.signOpt());
-        let rs = await WxPayStatic.request<reverse.Response>({ path: Path.reverse, data: obj, agent: this.agentOpt() });
+        let rs = await WxPayStatic.request<closeOrder.Response>({ path: Path.orderQuery, data: obj });
         return rs;
     }
 
@@ -64,17 +67,47 @@ export class WxPay extends WxPayBase {
     }
 
     async downloadBill(data: downloadBill.Request) {
-        if (!data.bill_type)
-            data.bill_type = downloadBill.billType.所有;
-        let obj = await WxPayStatic.getSignObj(data, this.signOpt());
+        let obj = await WxPayStatic.getSignObj({
+            bill_type: downloadBill.billType.所有,
+            ...data,
+        }, this.signOpt());
         let rs = await WxPayStatic.request<string>({ path: Path.downloadBill, data: obj, });
         return rs;
     }
 
-    async downloadFundflow(data: downloadFundflow.Request) {
-        data['sign_type'] = SignType.HMAC_SHA256;
+    async payNotifyHandler(req: string | payNotify.Request, fn: (req: payNotify.Request) => payNotify.Response) {
+        let data = req as payNotify.Request;
+        if (typeof req === 'string') {
+            data = await WxPayStatic.parseXml(req);
+        }
+        let rs: payNotify.Response
+        try {
+            rs = await fn(data);
+        } catch (e) {
+            console.error(e);
+            rs = {
+                return_code: 'FAIL',
+                return_msg: 'FAIL',
+            };
+        }
+        if (!rs) {
+            rs = {
+                return_code: 'SUCCESS',
+                return_msg: 'OK',
+            };
+        }
+        return WxPayStatic.buildXml(rs);
+    }
+
+    async microPay(data: microPay.Request) {
         let obj = await WxPayStatic.getSignObj(data, this.signOpt());
-        let rs = await WxPayStatic.request<string>({ path: Path.downloadFundflow, data: obj, agent: this.agentOpt() });
+        let rs = await WxPayStatic.request<microPay.Response>({ path: Path.microPay, data: obj });
+        return rs;
+    }
+
+    async reverse(data: reverse.Request) {
+        let obj = await WxPayStatic.getSignObj(data, this.signOpt());
+        let rs = await WxPayStatic.request<reverse.Response>({ path: Path.reverse, data: obj, agent: this.agentOpt() });
         return rs;
     }
 
@@ -84,7 +117,10 @@ export class WxPay extends WxPayBase {
         return rs;
     }
 
-    async refundNotify(req: string | refundNotify.Request, fn: (req: refundNotify.Request) => refundNotify.Response) {
+    //todo
+    //report
+
+    async refundNotifyHandler(req: string | refundNotify.Request, fn: (req: refundNotify.Request) => refundNotify.Response) {
         let data = req as refundNotify.Request;
         if (typeof req === 'string') {
             data = await WxPayStatic.parseXml(req);
@@ -109,7 +145,26 @@ export class WxPay extends WxPayBase {
                 return_msg: 'OK',
             };
         }
-        return WxPayStatic.buildXml({ xml: rs });
+        return WxPayStatic.buildXml(rs);
+    }
+
+    async batchQueryComment(data: batchQueryComment.Request) {
+        let obj = await WxPayStatic.getSignObj({
+            sign_type: SignType.HMAC_SHA256,
+            limit: 200,
+            ...data,
+        }, this.signOpt());
+        let rs = await WxPayStatic.request<batchQueryComment.Response>({ path: Path.batchQueryComment, data: obj, agent: this.agentOpt() });
+        return rs;
+    }
+
+    async downloadFundflow(data: downloadFundflow.Request) {
+        let obj = await WxPayStatic.getSignObj({
+            sign_type: SignType.HMAC_SHA256,
+            ...data,
+        }, this.signOpt());
+        let rs = await WxPayStatic.request<string>({ path: Path.downloadFundflow, data: obj, agent: this.agentOpt() });
+        return rs;
     }
 
     //#endregion

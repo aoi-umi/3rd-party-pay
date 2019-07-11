@@ -1,5 +1,3 @@
-//https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_5
-
 import * as base from './base';
 
 export class Request {
@@ -224,63 +222,54 @@ export const error = {
         code: 'SYSTEMERROR',
         desc: '接口返回错误',
         resolve: '请尝试再次掉调用API。',
-        payStatus: '',
     },
 
     REFUNDNOTEXIST: {
         code: 'REFUNDNOTEXIST',
         desc: '退款订单查询失败',
         resolve: '请检查订单号是否有误以及订单状态是否正确，如：未支付、已支付未退款',
-        payStatus: '',
     },
 
     INVALID_TRANSACTIONID: {
         code: 'INVALID_TRANSACTIONID',
         desc: '无效transaction_id',
         resolve: '请求参数错误，检查原交易号是否存在或发起支付交易接口返回失败',
-        payStatus: '',
     },
 
     PARAM_ERROR: {
         code: 'PARAM_ERROR',
         desc: '参数错误',
         resolve: '请求参数错误，请检查参数再调用退款申请',
-        payStatus: '',
     },
 
     APPID_NOT_EXIST: {
         code: 'APPID_NOT_EXIST',
         desc: 'APPID不存在',
         resolve: '请检查APPID是否正确',
-        payStatus: '',
     },
 
     MCHID_NOT_EXIST: {
         code: 'MCHID_NOT_EXIST',
         desc: 'MCHID不存在',
         resolve: '请检查MCHID是否正确',
-        payStatus: '',
     },
 
     REQUIRE_POST_METHOD: {
         code: 'REQUIRE_POST_METHOD',
         desc: '请使用post方法',
         resolve: '请检查请求参数是否通过post方法提交',
-        payStatus: '',
     },
 
     SIGNERROR: {
         code: 'SIGNERROR',
         desc: '签名错误',
         resolve: '请检查签名参数和方法是否都符合签名算法要求',
-        payStatus: '',
     },
 
     XML_FORMAT_ERROR: {
         code: 'XML_FORMAT_ERROR',
         desc: 'XML格式错误',
         resolve: '请检查XML参数格式是否正确',
-        payStatus: '',
     },
 
 }

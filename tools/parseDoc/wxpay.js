@@ -28,15 +28,19 @@ async function parse(url) {
     let table = $('table');
     let parseData = [];
     let notMatch = {};
+    function fixText(text) {
+        text.trim();
+        if (text.startsWith('-'))
+            text = text.substr(1);
+        return text;
+    }
     table.each(function (i) {
         let trs = $(this).find('tr');
         let headers = trs.slice(0, 1).children();
         let colName = [];
         let skip = false;
         headers.each(function (i) {
-            let text = $(this).text().trim();
-            if (text.startsWith('-'))
-                text = text.substr(1);
+            let text = fixText($(this).text());
             colName[i] = columnMap[text];
             if (!colName[i]) {
                 console.log('no match column ' + text);
@@ -51,7 +55,8 @@ async function parse(url) {
             let tds = $(this).find('td');
             if (tds.length && colName.length == tds.length) {
                 colName.forEach((ele, idx) => {
-                    data[colName[idx]] = $(tds[idx]).text().trim();
+                    let text = fixText($(tds[idx]).text());
+                    data[colName[idx]] = text;
                 });
                 if (!data.type)
                     data.errorCode = data.name;
@@ -70,7 +75,7 @@ async function parse(url) {
     });
     if (Object.keys(notMatch).length) {
         console.log(url);
-        console.log(`不符合格式` + Object.entries(notMatch).map(([key, val]) => { return key + ':' + val.join(',') }).join(';'));
+        console.log(`不符合格式` + Object.entries(notMatch).map(([key, val]) => { return '表' + key + ':' + val.join(',') }).join(';'));
     }
     return parseData;
 }
@@ -96,7 +101,8 @@ function convertToClass(data, clsName) {
             col.push(`code: '${val.errorCode}',`);
             col.push(`desc: '${val.desc.replace(returnLine, ';')}',`);
             col.push(`resolve: '${val.resolve.replace(returnLine, ';')}',`);
-            col.push(`payStatus: '${val.payStatus || ''}',`);
+            if (val.payStatus)
+                col.push(`payStatus: '${val.payStatus}',`);
             col.push(`},`);
         } else {
             col.push('/**');
@@ -116,32 +122,33 @@ function convertToClass(data, clsName) {
     return cls.join('\n\n');
 }
 
-[
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_2',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_4',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_5',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_6',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_18&index=7',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_14&index=8',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_16&index=10',
-    'https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_17&index=11',
-].forEach(async (url, i) => {
-    try {
-        // if (![8].includes(i))
-        //     return;
-        let parseData = await parse(url);
-        // console.log(parseData);
-        let dir = path.resolve(__dirname, '../../_test/_output/wx');
-        utils.mkdirsSync(dir);
-        let file = parseData.map(ele => convertToClass(ele)).join('\n\n');
-        file = '//' + url + '\n\n' + file;
-        fs.writeFileSync(dir + `/${i + 1}.ts`, file);
-    } catch (e) {
-        console.log(url);
-        console.error(e);
+let docUrl = 'https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_';
+let urls = Array.from(new Array(18).keys()).map(ele => docUrl + (ele + 1));
+let dict = {
+    pay: urls
+};
+
+async function run() {
+    for (let key in dict) {
+        let urls = dict[key];
+        for (let i = 0; i < urls.length; i++) {
+            let url = urls[i];
+            try {
+                // if (![8].includes(i))
+                //     return;
+                let parseData = await parse(url);
+                // console.log(parseData);
+                let dir = path.resolve(__dirname, '../../_test/_output/wx');
+                utils.mkdirsSync(dir);
+                let file = parseData.map(ele => convertToClass(ele)).join('\n\n');
+                file = '//' + url + '\n\n' + file;
+                fs.writeFileSync(dir + `/${key + (i + 1)}.ts`, file);
+            } catch (e) {
+                console.log(url);
+                console.error(e);
+            }
+        }
     }
-});
+}
+run();
 

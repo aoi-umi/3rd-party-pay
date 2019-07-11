@@ -1,5 +1,3 @@
-//https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_2
-
 import * as base from './base';
 
 export class Request {
@@ -184,14 +182,12 @@ export const error = {
         code: 'ORDERNOTEXIST',
         desc: '此交易订单号不存在',
         resolve: '该API只能查提交支付交易返回成功的订单，请商户检查需要查询的订单号是否正确',
-        payStatus: '',
     },
 
     SYSTEMERROR: {
         code: 'SYSTEMERROR',
         desc: '系统错误',
         resolve: '系统异常，请再调用发起查询',
-        payStatus: '',
     },
 
 };

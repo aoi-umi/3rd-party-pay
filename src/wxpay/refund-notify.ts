@@ -1,4 +1,4 @@
-//https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_16&index=10
+import * as base from './base';
 
 export class Request {
 
@@ -157,20 +157,6 @@ export class RequestInfo {
 
 }
 
-export class Response {
-
-    /**
-     * 返回状态码
-     * SUCCESS/FAIL
-     * example: SUCCESS
-     */
-    return_code: string
-
-    /**
-     * 返回信息
-     * 返回信息，如非空，为错误原因
-     * example: OK
-     */
-    return_msg?: string
+export class Response extends base.ResponseBase {
 
 }

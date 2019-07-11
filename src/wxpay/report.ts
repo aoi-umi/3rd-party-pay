@@ -1,5 +1,3 @@
-//https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_14&index=8
-
 import * as base from './base';
 
 export class Resuest {

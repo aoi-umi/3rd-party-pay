@@ -46,7 +46,7 @@ export class Request {
     sign_type?: string
 }
 
-export class Response {
+export class ResponseBase {
     /**
      * 返回状态码
      * SUCCESS/FAIL 
@@ -63,6 +63,10 @@ export class Response {
      * example: OK
      */
     return_msg: string
+}
+
+export class Response extends ResponseBase {
+
 
     /**
      * 业务结果
@@ -70,6 +74,13 @@ export class Response {
      * example: SUCCESS
      */
     result_code: string
+
+    /**
+     * 业务结果描述
+     * 对业务结果的补充说明
+     * example: OK
+     */
+    result_msg: string;
 
     /**
      * 错误代码
@@ -114,20 +125,54 @@ export class Response {
     sign: string
 }
 export const Path = {
+    //沙箱
+    //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=23_1
     getSignKey: '/pay/getsignkey',
 
-    //支付
-    microPay: '/pay/micropay',
+    //#region 支付
+    //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
+    unifiedOrder: '/pay/unifiedorder',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
     orderQuery: '/pay/orderquery',
-    reverse: '/secapi/pay/reverse',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
+    closeOrder: '/pay/closeorder',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_4
     refund: '/secapi/pay/refund',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_5
     refundQuery: '/pay/refundquery',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_6
     downloadBill: '/pay/downloadbill',
-    downloadFundflow: '/pay/downloadfundflow',
-    report: '/payitil/report',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7
+    //支付回调
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10
+    microPay: '/pay/micropay',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11
+    reverse: '/secapi/pay/reverse',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13
     authCodeToOpenid: '/tools/authcodetoopenid',
 
-    //
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_14
+    report: '/payitil/report',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_16
+    //退款回调
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_17
+    batchQueryComment: '/billcommentsp/batchquerycomment',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_18
+    downloadFundflow: '/pay/downloadfundflow',
+
+    //#endregion
 }
 export class WxPayBase {
     mch_id: string;
@@ -138,11 +183,13 @@ export class WxPayBase {
 export class WxPayStatic {
     static sandbox = false;
     static success = 'SUCCESS';
+    static host = 'https://api.mch.weixin.qq.com';
+    static sandboxHost = 'https://api.mch.weixin.qq.com/sandboxnew';
     static getHost() {
-        return !this.sandbox ? 'https://api.mch.weixin.qq.com' : 'https://api.mch.weixin.qq.com/sandboxnew';
+        return !this.sandbox ? this.host : this.sandboxHost;
     }
-    static buildXml(data) {
-        return xmlBuilder.buildObject({ xml: data });
+    static buildXml(data, root = false) {
+        return xmlBuilder.buildObject(root ? data : { xml: data });
     }
 
     static async parseXml<T = any>(xml: string, root = false) {
@@ -177,7 +224,8 @@ export class WxPayStatic {
         }
         let rs = await utils.request(reqData);
         let contentType: string = rs.headers['content-type'];
-        let isText = contentType.indexOf('text/plain') > -1;
+        // console.log(contentType);
+        let isText = contentType.indexOf('text/') > -1;
         let data = rs.data;
         let isXml = false;
         if (isText) {
@@ -204,7 +252,6 @@ export class WxPayStatic {
         }
     }
 
-    //#region 调用接口 
     //沙箱获取key接口
     static async getsignkey(data: { mch_id: string; }) {
         let signObj = {
@@ -212,10 +259,16 @@ export class WxPayStatic {
             nonce_str: utils.randomString(),
         };
         signObj['sign'] = this.createSign(signObj);
-        let resData = await this.request({ path: Path.getSignKey, data: signObj });
-        return resData;
+        let rs = await this.request<ResponseBase & {
+            mch_id: string;
+            sandbox_signkey: string;
+        }>({ path: Path.getSignKey, data: signObj });
+
+        if (rs.return_code !== this.success)
+            throw new Error(rs.return_msg);
+
+        return rs;
     }
-    //#endregion
 
     static createSign(signObj: any, opt?: {
         key?: string;
@@ -238,8 +291,6 @@ export class WxPayStatic {
             let rs = await this.getsignkey({
                 mch_id: signObj.mch_id,
             });
-            if (rs.return_code !== this.success)
-                throw new Error(rs.return_msg);
             key = rs.sandbox_signkey;
         }
         obj.nonce_str = utils.randomString();

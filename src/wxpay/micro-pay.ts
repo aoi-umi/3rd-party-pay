@@ -1,5 +1,3 @@
-//https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
-
 import * as base from './base';
 
 export class Request {
@@ -109,28 +107,28 @@ export class Request {
     scene_info?: string
 
     /**
-     * -门店id
+     * 门店id
      * 门店唯一标识
      * example: SZTX001
      */
     id?: string
 
     /**
-     * -门店名称
+     * 门店名称
      * 门店名称
      * example: 腾讯大厦腾大餐厅
      */
     name?: string
 
     /**
-     * -门店行政区划码
+     * 门店行政区划码
      * 门店所在地行政区划码，详细见《最新县及县以上行政区划代码》
      * example: 440305
      */
     area_code?: string
 
     /**
-     * -门店详细地址
+     * 门店详细地址
      * 门店详细地址
      * example: 科技园中一路腾讯大厦
      */
