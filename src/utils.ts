@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import * as Q from 'q';
-import * as crypto from 'crypto';
 import * as md from 'node-forge/lib/md.all';
 import * as hmac from 'node-forge/lib/hmac';
 
@@ -74,6 +73,6 @@ export function encrypt(str: string, type: 'md5' | 'sha256' = 'md5', key?: strin
     let en = encrypt.create();
     if (isHmac)
         en.start(type, key);
-    en.update(str);
+    en.update(str, 'utf8');
     return en.digest().toHex();
 }

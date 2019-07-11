@@ -2,7 +2,7 @@
 import * as utils from '../utils';
 
 export * from './base';
-import { WxPayStatic, WxPayBase, Path, SignType } from './base';
+import { WxPayStatic, WxPayBase, Path, SignType, BillType } from './base';
 //#region 支付接口 
 import * as unifiedOrder from './unified-order';
 import * as orderQuery from './order-query';
@@ -18,6 +18,12 @@ import * as authCodeToOpenid from './auth-code-to-openid';
 import * as refundNotify from './refund-notify';
 import * as batchQueryComment from './batch-query-comment';
 import * as downloadFundflow from './download-fundflow';
+//#endregion
+
+//#region 企业付款 
+
+import * as transfers from './transfers';
+import * as getTransferInfo from './get-transfer-info';
 //#endregion
 
 export class WxPay extends WxPayBase {
@@ -71,7 +77,7 @@ export class WxPay extends WxPayBase {
 
     async downloadBill(data: downloadBill.Request) {
         let obj = await WxPayStatic.getSignObj({
-            bill_type: downloadBill.billType.所有,
+            bill_type: BillType.所有,
             ...data,
         }, this.signOpt());
         let rs = await WxPayStatic.request<string>({ path: Path.downloadBill, data: obj, });
@@ -174,6 +180,25 @@ export class WxPay extends WxPayBase {
             ...data,
         }, this.signOpt());
         let rs = await WxPayStatic.request<string>({ path: Path.downloadFundflow, data: obj, agent: this.agentOpt() });
+        return rs;
+    }
+
+    //#endregion
+
+    //#region 企业付款 
+
+    async transfers(data: transfers.Request) {
+        let obj = await WxPayStatic.getSignObj(data, {
+            ...this.signOpt(),
+            mch: true,
+        });
+        let rs = await WxPayStatic.request<transfers.Response>({ path: Path.transfers, data: obj, agent: this.agentOpt() });
+        return rs;
+    }
+
+    async getTransferInfo(data: getTransferInfo.Request) {
+        let obj = await WxPayStatic.getSignObj(data, this.signOpt());
+        let rs = await WxPayStatic.request<getTransferInfo.Response>({ path: Path.getTransferInfo, data: obj, agent: this.agentOpt() });
         return rs;
     }
 

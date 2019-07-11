@@ -52,10 +52,3 @@ export const error = {
 
     },
 };
-
-export const billType = {
-    所有: 'ALL',
-    成功: 'SUCCESS',
-    退款: 'REFUND',
-    充值退款: 'RECHARGE_REFUND'
-};

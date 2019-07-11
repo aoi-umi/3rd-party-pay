@@ -9,20 +9,7 @@ import * as utils from '../utils';
 
 const xmlBuilder = new xml2js.Builder({ headless: true });
 
-export class Request {
-    /**
-    * 公众账号ID
-    * 微信分配的公众账号ID（企业号corpid即为此appId）
-    * example: wx8888888888888888
-    */
-    appid: string
-
-    /**
-     * 商户号
-     * 微信支付分配的商户号
-     * example: 1900000109
-     */
-    mch_id: string
+export class Sign {
 
     /**
      * 随机字符串
@@ -36,7 +23,7 @@ export class Request {
      * 签名，详见签名生成算法
      * example: C380BEC2BFD727A4B6845133519F3AD6
      */
-    sign?: string
+    sign: string
 
     /**
      * 签名类型
@@ -44,6 +31,22 @@ export class Request {
      * example: HMAC-SHA256
      */
     sign_type?: string
+}
+
+export class Request extends Sign {
+    /**
+    * 公众账号ID
+    * 微信分配的公众账号ID（企业号corpid即为此appId）
+    * example: wx8888888888888888
+    */
+    appid: string
+
+    /**
+     * 商户号
+     * 微信支付分配的商户号
+     * example: 1900000109
+     */
+    mch_id: string
 }
 
 export class ResponseBase {
@@ -65,8 +68,7 @@ export class ResponseBase {
     return_msg: string
 }
 
-export class Response extends ResponseBase {
-
+export class SuccessResponse extends ResponseBase {
 
     /**
      * 业务结果
@@ -97,20 +99,6 @@ export class Response extends ResponseBase {
     err_code_des?: string
 
     /**
-     * 公众账号ID
-     * 调用接口提交的公众账号ID
-     * example: wx8888888888888888
-     */
-    appid: string
-
-    /**
-     * 商户号
-     * 调用接口提交的商户号
-     * example: 1900000109
-     */
-    mch_id: string
-
-    /**
      * 随机字符串
      * 微信返回的随机字符串
      * example: 5K8264ILTKCH16CQ2502SI8ZNMTM67VS
@@ -124,6 +112,57 @@ export class Response extends ResponseBase {
      */
     sign: string
 }
+
+export class Response extends SuccessResponse {
+
+    /**
+     * 公众账号ID
+     * 调用接口提交的公众账号ID
+     * example: wx8888888888888888
+     */
+    appid: string
+
+    /**
+     * 商户号
+     * 调用接口提交的商户号
+     * example: 1900000109
+     */
+    mch_id: string
+}
+
+export class MchRequest extends Sign {
+
+    /**
+     * 商户账号appid
+     * 申请商户号的appid或商户号绑定的appid
+     * example: wx8888888888888888
+     */
+    mch_appid: string;
+
+    /**
+     * 商户号
+     * 微信支付分配的商户号
+     * example: 1900000109
+     */
+    mchid: string;
+}
+
+export class MchResponse extends SuccessResponse {
+    /**
+     * 商户appid
+     * 申请商户号的appid或商户号绑定的appid（企业号corpid即为此appId）
+     * example: wx8888888888888888
+     */
+    mch_appid: string;
+
+    /**
+     * 商户号
+     * 微信支付分配的商户号
+     * example: 1900000109
+     */
+    mchid: string;
+}
+
 export const Path = {
     //沙箱
     //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=23_1
@@ -184,6 +223,17 @@ export const Path = {
     downloadFundflow: '/pay/downloadfundflow',
 
     //#endregion
+
+    //#region 企业付款 
+
+    //https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
+    transfers: '/mmpaymkttransfers/promotion/transfers',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_3
+    getTransferInfo: '/mmpaymkttransfers/gettransferinfo'
+
+    //#endregion
+
 };
 export class WxPayBase {
     mch_id: string;
@@ -288,19 +338,25 @@ export class WxPayStatic {
         opt = { ...opt };
         let obj = utils.sortObject(signObj);
         let signStr = qs.stringify(obj, { encode: false });
+        // console.log(signStr);
         signStr += '&key=' + opt.key;
         let sign = utils.encrypt(signStr, opt.encrypt as any, opt.key).toUpperCase();
         return sign;
     }
 
-    static async getSignObj(signObj, opt: WxPayBase) {
+    static async getSignObj(signObj, opt: WxPayBase & { mch?: boolean }) {
         let key = opt.key;
         let obj = utils.clone(signObj);
-        obj.mch_id = opt.mch_id;
-        obj.appid = opt.appid;
+        if (!opt.mch) {
+            obj.mch_id = opt.mch_id;
+            obj.appid = opt.appid;
+        } else {
+            obj.mchid = opt.mch_id;
+            obj.mch_appid = opt.appid;
+        }
         if (this.sandbox) {
             let rs = await this.getsignkey({
-                mch_id: signObj.mch_id,
+                mch_id: opt.mch_id,
             });
             key = rs.sandbox_signkey;
         }
@@ -336,4 +392,16 @@ export const TradeType = {
 export const SignType = {
     MD5: 'MD5',
     HMAC_SHA256: 'HMAC-SHA256'
+};
+
+export const BillType = {
+    所有: 'ALL',
+    成功: 'SUCCESS',
+    退款: 'REFUND',
+    充值退款: 'RECHARGE_REFUND'
+};
+
+export const CheckName = {
+    不校验: 'NO_CHECK',
+    强校验: 'FORCE_CHECK',
 };

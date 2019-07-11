@@ -7,15 +7,19 @@ const utils = require('../utils');
 const columnMap = {
     字段名: 'name',
     名称: 'name',
+    字段: 'varName',
     变量名: 'varName',
     必填: 'required',
     类型: 'type',
     示例值: 'example',
     描述: 'desc',
     说明: 'desc',
+    错误描述: 'desc',
     原因: 'reason',
     解决方案: 'resolve',
+    解决方式: 'resolve',
     错误码: 'errorCode',
+    错误代码: 'errorCode',
     支付状态: 'payStatus',
 };
 
@@ -29,7 +33,7 @@ async function parse(url) {
     let parseData = [];
     let notMatch = {};
     function fixText(text) {
-        text.trim();
+        text = text.trim();
         if (text.startsWith('-'))
             text = text.substr(1);
         return text;
@@ -38,17 +42,20 @@ async function parse(url) {
         let trs = $(this).find('tr');
         let headers = trs.slice(0, 1).children();
         let colName = [];
-        let skip = false;
+        let noMatchColumn = [];
+        if (headers.length < 3)
+            return;
         headers.each(function (i) {
             let text = fixText($(this).text());
             colName[i] = columnMap[text];
             if (!colName[i]) {
-                console.log('no match column ' + text);
-                skip = true;
+                noMatchColumn.push(text.substr(0, 10).trim());
             }
         });
-        if (skip)
+        if (noMatchColumn.length) {
+            console.log('no match column: ' + noMatchColumn.join(','));
             return;
+        }
         let dist = {};
         trs.slice(1).each(function (row) {
             let data = {};
@@ -58,7 +65,7 @@ async function parse(url) {
                     let text = fixText($(tds[idx]).text());
                     data[colName[idx]] = text;
                 });
-                if (!data.type)
+                if (!data.type && data.name)
                     data.errorCode = data.name;
                 if (data.errorCode)
                     dist[data.errorCode] = data;
@@ -100,7 +107,8 @@ function convertToClass(data, clsName) {
             col.push(`${val.errorCode}: {`);
             col.push(`code: '${val.errorCode}',`);
             col.push(`desc: '${val.desc.replace(returnLine, ';')}',`);
-            col.push(`resolve: '${val.resolve.replace(returnLine, ';')}',`);
+            if (val.resolve)
+                col.push(`resolve: '${val.resolve.replace(returnLine, ';')}',`);
             if (val.payStatus)
                 col.push(`payStatus: '${val.payStatus}',`);
             col.push(`},`);
@@ -125,7 +133,16 @@ function convertToClass(data, clsName) {
 let docUrl = 'https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_';
 let urls = Array.from(new Array(18).keys()).map(ele => docUrl + (ele + 1));
 let dict = {
-    pay: urls
+    // pay: urls,
+    transfer: [
+        //红包
+        'https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4',
+        'https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_5',
+        'https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_6',
+        //企业付款
+        'https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2',
+        'https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_3',
+    ]
 };
 
 async function run() {
