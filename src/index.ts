@@ -2,16 +2,20 @@ import * as wxpay from './wxpay';
 export * from './wxpay';
 
 export function config(opt: {
-    sandbox?: boolean;
-    host?: string;
-    sandboxHost?: string;
-
-}) {
-    if (typeof opt.sandbox !== 'undefined') {
-        wxpay.WxPayStatic.sandbox = opt.sandbox;
+    wxpay?: {
+        sandbox?: boolean;
+        host?: string;
+        sandboxHost?: string;
     }
-    if (opt.host)
-        wxpay.WxPayStatic.host = opt.host;
-    if (opt.sandboxHost)
-        wxpay.WxPayStatic.sandboxHost = opt.sandboxHost;
+}) {
+    let wxpayOpt = opt.wxpay;
+    if (wxpayOpt) {
+        if (typeof wxpayOpt.sandbox !== 'undefined') {
+            wxpay.WxPayStatic.sandbox = wxpayOpt.sandbox;
+        }
+        if (wxpayOpt.host)
+            wxpay.WxPayStatic.host = wxpayOpt.host;
+        if (wxpayOpt.sandboxHost)
+            wxpay.WxPayStatic.sandboxHost = wxpayOpt.sandboxHost;
+    }
 }

@@ -252,6 +252,7 @@ export class WxPayStatic {
             method: opt.method as any,
             data: _xml,
         };
+        console.log(reqData.url);
         console.log('wxpay send data:\r\n', _xml);
         if (opt.agent) {
             reqData.httpsAgent = new https.Agent({
