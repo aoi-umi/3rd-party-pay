@@ -72,4 +72,4 @@ export const error = {
         resolve: '请检查post数据是否为空',
     },
 
-}
+};

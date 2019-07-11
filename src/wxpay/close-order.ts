@@ -52,4 +52,4 @@ export const error = {
         resolve: '请检查XML参数格式是否正确',
     },
 
-}
+};

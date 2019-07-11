@@ -62,7 +62,7 @@ export let promisify = function <T = any>(fn, caller?) {
     if (caller)
         fn = fn.bind(caller);
     return Q.denodeify<T>(fn);
-}
+};
 
 export function encrypt(str: string, type: 'md5' | 'sha256' = 'md5', key?: string) {
     let encrypt = md.md5;

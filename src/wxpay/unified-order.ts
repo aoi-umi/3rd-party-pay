@@ -296,4 +296,4 @@ export const error = {
         resolve: '请使用UTF-8编码格式',
     },
 
-}
+};

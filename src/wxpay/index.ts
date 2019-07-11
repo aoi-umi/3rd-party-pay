@@ -83,7 +83,7 @@ export class WxPay extends WxPayBase {
         if (typeof req === 'string') {
             data = await WxPayStatic.parseXml(req);
         }
-        let rs: payNotify.Response
+        let rs: payNotify.Response;
         try {
             rs = await fn(data);
         } catch (e) {
@@ -139,7 +139,7 @@ export class WxPay extends WxPayBase {
         let reqInfo = WxPayStatic.decrypt(key, data.req_info);
         let parse = await WxPayStatic.parseXml<{ root: refundNotify.RequestInfo }>(reqInfo, true);
         data.req_info = parse.root;
-        let rs: refundNotify.Response
+        let rs: refundNotify.Response;
         try {
             rs = await fn(data);
         } catch (e) {

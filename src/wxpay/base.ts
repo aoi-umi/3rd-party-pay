@@ -184,7 +184,7 @@ export const Path = {
     downloadFundflow: '/pay/downloadfundflow',
 
     //#endregion
-}
+};
 export class WxPayBase {
     mch_id: string;
     appid: string;
@@ -231,7 +231,7 @@ export class WxPayStatic {
             reqData.httpsAgent = new https.Agent({
                 pfx: fs.readFileSync(opt.agent.pfxPath),
                 passphrase: opt.agent.passphrase
-            })
+            });
         }
         let rs = await utils.request(reqData);
         let contentType: string = rs.headers['content-type'];
