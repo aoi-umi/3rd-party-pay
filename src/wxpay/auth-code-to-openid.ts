@@ -1,6 +1,6 @@
 import * as base from './base';
 
-export class Request {
+export class Request extends base.Request {
 
     /**
      * 授权码

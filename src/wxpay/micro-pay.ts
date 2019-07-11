@@ -1,6 +1,6 @@
 import * as base from './base';
 
-export class Request {
+export class Request extends base.Request {
     /**
      * 设备号
      * 终端设备号(商户自定义，如门店编号)

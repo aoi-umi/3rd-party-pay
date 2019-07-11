@@ -1,6 +1,6 @@
 import * as base from './base';
 
-export class Resuest {
+export class Resuest extends base.Request {
 
     /**
      * 设备号

@@ -33,20 +33,13 @@ export class Sign {
     sign_type?: string
 }
 
-export class Request extends Sign {
+export class Request {
     /**
     * 公众账号ID
     * 微信分配的公众账号ID（企业号corpid即为此appId）
     * example: wx8888888888888888
     */
-    appid: string
-
-    /**
-     * 商户号
-     * 微信支付分配的商户号
-     * example: 1900000109
-     */
-    mch_id: string
+    appid?: string
 }
 
 export class ResponseBase {
@@ -128,23 +121,6 @@ export class Response extends SuccessResponse {
      * example: 1900000109
      */
     mch_id: string
-}
-
-export class MchRequest extends Sign {
-
-    /**
-     * 商户账号appid
-     * 申请商户号的appid或商户号绑定的appid
-     * example: wx8888888888888888
-     */
-    mch_appid: string;
-
-    /**
-     * 商户号
-     * 微信支付分配的商户号
-     * example: 1900000109
-     */
-    mchid: string;
 }
 
 export class MchResponse extends SuccessResponse {
@@ -346,13 +322,20 @@ export class WxPayStatic {
 
     static async getSignObj(signObj, opt: WxPayBase & { mch?: boolean }) {
         let key = opt.key;
-        let obj = utils.clone(signObj);
+        let obj = utils.clone(signObj) as Sign & {
+            mch_id?: string; appid?: string;
+        } & {
+            mchid?: string; mch_appid?: string
+        };
+
+        let appid = obj.appid || opt.appid;
+        delete obj.appid;
         if (!opt.mch) {
             obj.mch_id = opt.mch_id;
-            obj.appid = opt.appid;
+            obj.appid = appid;
         } else {
             obj.mchid = opt.mch_id;
-            obj.mch_appid = opt.appid;
+            obj.mch_appid = appid;
         }
         if (this.sandbox) {
             let rs = await this.getsignkey({

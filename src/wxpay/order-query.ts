@@ -1,6 +1,6 @@
 import * as base from './base';
 
-export class Request {
+export class Request extends base.Request {
     /**
      * 微信订单号
      * 微信的订单号，建议优先使用

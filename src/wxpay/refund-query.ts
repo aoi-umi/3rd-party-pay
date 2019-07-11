@@ -1,6 +1,6 @@
 import * as base from './base';
 
-export class Request {
+export class Request extends base.Request {
     /**
      * 微信订单号
      * 微信订单号查询的优先级是： refund_id > out_refund_no > transaction_id > out_trade_no
