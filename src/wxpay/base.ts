@@ -151,17 +151,28 @@ export const Path = {
     //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7
     //支付回调
 
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_8
+    report: '/payitil/report',
+
+    //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_9
+    shortUrl: '/tools/shorturl',
+
     //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10
     microPay: '/pay/micropay',
 
     //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11
     reverse: '/secapi/pay/reverse',
 
+    //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_12
+    //APP端调起支付的参数列表
+
     //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13
     authCodeToOpenid: '/tools/authcodetoopenid',
 
     //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_14
-    report: '/payitil/report',
+    //同report
+
+    //没15
 
     //https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_16
     //退款回调

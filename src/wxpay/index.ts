@@ -3,6 +3,7 @@ import * as utils from '../utils';
 
 export * from './base';
 import { WxPayStatic, WxPayBase, Path, SignType } from './base';
+//#region 支付接口 
 import * as unifiedOrder from './unified-order';
 import * as orderQuery from './order-query';
 import * as closeOrder from './close-order';
@@ -10,12 +11,14 @@ import * as refund from './refund';
 import * as refundQuery from './refund-query';
 import * as downloadBill from './download-bill';
 import * as payNotify from './pay-notify';
+import * as shortUrl from './short-url';
 import * as microPay from './micro-pay';
 import * as reverse from './reverse';
 import * as authCodeToOpenid from './auth-code-to-openid';
 import * as refundNotify from './refund-notify';
 import * as batchQueryComment from './batch-query-comment';
 import * as downloadFundflow from './download-fundflow';
+//#endregion
 
 export class WxPay extends WxPayBase {
     constructor(opt: WxPayBase) {
@@ -97,6 +100,13 @@ export class WxPay extends WxPayBase {
             };
         }
         return WxPayStatic.buildXml(rs);
+    }
+
+    //不知道咋用,现在Native返回的就是短链接?
+    async shortUrl(data: shortUrl.Request) {
+        let obj = await WxPayStatic.getSignObj(data, this.signOpt());
+        let rs = await WxPayStatic.request<shortUrl.Response>({ path: Path.shortUrl, data: obj });
+        return rs;
     }
 
     async microPay(data: microPay.Request) {
