@@ -2,7 +2,10 @@
   "name": "3rd-party-pay",
   "version": "1.0.0",
   "description": "",
-  "main": "dest/index.js",
+  "main": "dest/lib/index.js",
+  "files": [
+    "dest/lib"
+  ],
   "dependencies": {
     "axios": "^0.19.0",
     "cheerio": "^1.0.0-rc.3",
