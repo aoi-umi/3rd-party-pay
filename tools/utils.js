@@ -111,6 +111,7 @@ exports.parse = async function (url, columnMap) {
     let parseData = [];
     let notMatch = {};
 
+    let repeat = [];
     table.each(function (i) {
         let trs = $(this).find('tr');
         let headers = trs.slice(0, 1).children();
@@ -165,9 +166,12 @@ exports.parse = async function (url, columnMap) {
         if (Object.keys(dist).length)
             parseData.push(dist);
         let countEnt = Object.entries(count).filter(e => e[1] > 1);
-        if (countEnt.length)
-            console.log('重复key', url, countEnt.join(','));
+        if (countEnt.length) {
+            repeat.push({ table: i, key: countEnt.join(',') });
+        }
     });
+    if (repeat.length)
+        console.log('重复key', url, repeat);
     if (Object.keys(notMatch).length) {
         console.log(url);
         console.log(`不符合格式` + Object.entries(notMatch).map(([key, val]) => { return '表' + key + ':' + val.join(',') }).join(';'));
