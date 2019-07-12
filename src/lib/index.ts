@@ -1,4 +1,5 @@
 import * as wxpay from './wxpay';
+import { RequestLog } from './wxpay';
 export * from './wxpay';
 
 export function config(opt: {
@@ -6,6 +7,7 @@ export function config(opt: {
         sandbox?: boolean;
         host?: string;
         sandboxHost?: string;
+        requestLog: (log: RequestLog) => any;
     }
 }) {
     let wxpayOpt = opt.wxpay;
@@ -17,5 +19,7 @@ export function config(opt: {
             wxpay.WxPayStatic.host = wxpayOpt.host;
         if (wxpayOpt.sandboxHost)
             wxpay.WxPayStatic.sandboxHost = wxpayOpt.sandboxHost;
+        if (wxpayOpt.requestLog)
+            wxpay.WxPayStatic.requestLog = wxpayOpt.requestLog;
     }
 }

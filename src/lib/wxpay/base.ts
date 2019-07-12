@@ -217,6 +217,16 @@ export class WxPayBase {
     key: string;
     pfxPath?: string;
 }
+
+export class RequestLog {
+    success?: boolean;
+    url?: string;
+    req?: any;
+    orginReq?: any;
+    res?: any;
+    orginRes?: any;
+    msg?: string;
+}
 export class WxPayStatic {
     static sandbox = false;
     static success = 'SUCCESS';
@@ -234,6 +244,10 @@ export class WxPayStatic {
         return (root ? jsonBody : jsonBody.xml) as T;
     }
 
+    static requestLog(log: RequestLog) {
+        console.log(log);
+    }
+
     static async request<T = any>(opt: {
         data: any;
         host?: string;
@@ -246,40 +260,54 @@ export class WxPayStatic {
         notThrowErr?: boolean;
         originalResult?: boolean;
     }) {
-        let _xml = xmlBuilder.buildObject({ xml: opt.data });
-        let reqData: AxiosRequestConfig = {
-            url: (opt.host || this.getHost()) + opt.path,
-            method: opt.method as any,
-            data: _xml,
+        let log: RequestLog = {
+            success: true
         };
-        console.log(reqData.url);
-        console.log('wxpay send data:\r\n', _xml);
-        if (opt.agent) {
-            reqData.httpsAgent = new https.Agent({
-                pfx: fs.readFileSync(opt.agent.pfxPath),
-                passphrase: opt.agent.passphrase
-            });
-        }
-        let rs = await utils.request(reqData);
-        let contentType: string = rs.headers['content-type'];
-        // console.log(contentType);
-        let isText = contentType.indexOf('text/') > -1;
-        let data = rs.data;
-        let isXml = false;
-        if (isText) {
-            data = data.toString('utf-8');
-            isXml = data.startsWith('<xml>');
-        }
-        if (!isXml || opt.originalResult)
-            return data as T;
-        console.log('wxpay return data:\r\n', data);
-        let xmlRs: Response = await this.parseXml(data);
+        try {
+            let url = (opt.host || this.getHost()) + opt.path;
+            log.url = url;
+            log.orginReq = opt.data;
+            let _xml = xmlBuilder.buildObject({ xml: opt.data });
+            let reqData: AxiosRequestConfig = {
+                url: (opt.host || this.getHost()) + opt.path,
+                method: opt.method as any,
+                data: _xml,
+            };
+            log.req = _xml;
+            if (opt.agent) {
+                reqData.httpsAgent = new https.Agent({
+                    pfx: fs.readFileSync(opt.agent.pfxPath),
+                    passphrase: opt.agent.passphrase
+                });
+            }
+            let rs = await utils.request(reqData);
+            let contentType: string = rs.headers['content-type'];
+            // console.log(contentType);
+            let isText = contentType.indexOf('text/') > -1;
+            let data = rs.data;
+            log.orginRes = data;
+            let isXml = false;
+            if (isText) {
+                data = data.toString('utf-8');
+                isXml = data.startsWith('<xml>');
+            }
+            log.res = data;
+            if (!isXml || opt.originalResult)
+                return data as T;
+            let xmlRs: Response = await this.parseXml(data);
 
-        if (!opt.notThrowErr) {
-            this.handleError(xmlRs);
-        }
+            if (!opt.notThrowErr) {
+                this.handleError(xmlRs);
+            }
 
-        return xmlRs as any as T;
+            return xmlRs as any as T;
+        } catch (e) {
+            log.success = false;
+            log.msg = e.message;
+            throw e;
+        } finally {
+            this.requestLog && this.requestLog(log);
+        }
     }
 
     static handleError(rs: Response) {
