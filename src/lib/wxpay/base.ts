@@ -6,6 +6,7 @@ import * as crypto from 'crypto';
 import { AxiosRequestConfig } from 'axios';
 
 import * as utils from '../utils';
+import { RequestLog, PayStatic } from '../base';
 
 const xmlBuilder = new xml2js.Builder({ headless: true });
 
@@ -68,14 +69,14 @@ export class SuccessResponse extends ResponseBase {
      * SUCCESS/FAIL
      * example: SUCCESS
      */
-    result_code: string
+    result_code?: string
 
     /**
      * 业务结果描述
      * 对业务结果的补充说明
      * example: OK
      */
-    result_msg: string;
+    result_msg?: string;
 
     /**
      * 错误代码
@@ -218,23 +219,11 @@ export class WxPayBase {
     pfxPath?: string;
 }
 
-export class RequestLog {
-    success?: boolean;
-    url?: string;
-    req?: any;
-    orginReq?: any;
-    res?: any;
-    orginRes?: any;
-    msg?: string;
-}
-export class WxPayStatic {
-    static sandbox = false;
+export class WxPayStatic extends PayStatic {
     static success = 'SUCCESS';
     static host = 'https://api.mch.weixin.qq.com';
     static sandboxHost = 'https://api.mch.weixin.qq.com/sandboxnew';
-    static getHost() {
-        return !this.sandbox ? this.host : this.sandboxHost;
-    }
+
     static buildXml(data, root = false) {
         return xmlBuilder.buildObject(root ? data : { xml: data });
     }
@@ -242,10 +231,6 @@ export class WxPayStatic {
     static async parseXml<T = any>(xml: string, root = false) {
         let jsonBody = await utils.promisify(xml2js.parseString)(xml, { explicitArray: false });
         return (root ? jsonBody : jsonBody.xml) as T;
-    }
-
-    static requestLog(log: RequestLog) {
-        console.log(log);
     }
 
     static async request<T = any>(opt: {
@@ -297,7 +282,7 @@ export class WxPayStatic {
             let xmlRs: Response = await this.parseXml(data);
 
             if (!opt.notThrowErr) {
-                this.handleError(xmlRs);
+                this.errorHandler(xmlRs);
             }
 
             return xmlRs as any as T;
@@ -310,7 +295,7 @@ export class WxPayStatic {
         }
     }
 
-    static handleError(rs: Response) {
+    static errorHandler(rs: Response) {
         if (rs.return_code !== WxPayStatic.success)
             throw new Error(rs.return_msg);
         if (rs.result_code && rs.result_code !== WxPayStatic.success) {
@@ -330,8 +315,7 @@ export class WxPayStatic {
             sandbox_signkey: string;
         }>({ path: Path.getSignKey, data: signObj });
 
-        if (rs.return_code !== this.success)
-            throw new Error(rs.return_msg);
+        this.errorHandler(rs as any);
 
         return rs;
     }

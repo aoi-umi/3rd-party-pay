@@ -1,6 +1,9 @@
-import * as wxpay from './wxpay';
-import { RequestLog } from './wxpay';
-export * from './wxpay';
+import { RequestLog } from './base';
+import * as _wxpay from './wxpay';
+import * as _alipay from './alipay';
+
+export const wxpay = _wxpay;
+export const alipay = _alipay;
 
 export function config(opt: {
     wxpay?: {
@@ -8,18 +11,22 @@ export function config(opt: {
         host?: string;
         sandboxHost?: string;
         requestLog: (log: RequestLog) => any;
+    },
+    alipay?: {
+
     }
 }) {
     let wxpayOpt = opt.wxpay;
     if (wxpayOpt) {
         if (typeof wxpayOpt.sandbox !== 'undefined') {
-            wxpay.WxPayStatic.sandbox = wxpayOpt.sandbox;
+            _wxpay.WxPayStatic.sandbox = wxpayOpt.sandbox;
         }
         if (wxpayOpt.host)
-            wxpay.WxPayStatic.host = wxpayOpt.host;
+            _wxpay.WxPayStatic.host = wxpayOpt.host;
         if (wxpayOpt.sandboxHost)
-            wxpay.WxPayStatic.sandboxHost = wxpayOpt.sandboxHost;
+            _wxpay.WxPayStatic.sandboxHost = wxpayOpt.sandboxHost;
         if (wxpayOpt.requestLog)
-            wxpay.WxPayStatic.requestLog = wxpayOpt.requestLog;
+            _wxpay.WxPayStatic.requestLog = wxpayOpt.requestLog;
     }
 }
+

@@ -76,3 +76,30 @@ export function encrypt(str: string, type: 'md5' | 'sha256' = 'md5', key?: strin
     en.update(str, 'utf8');
     return en.digest().toHex();
 }
+
+export function dateFormat(date?: string | number | Date, format = 'yyyy-MM-dd HH:mm:ss') {
+    if (!date)
+        date = new Date();
+    else if (typeof date == 'number' || typeof date == 'string')
+        date = new Date(date);
+
+    var o = {
+        y: date.getFullYear(),
+        M: date.getMonth() + 1,
+        d: date.getDate(),
+        h: date.getHours() % 12,
+        H: date.getHours(),
+        m: date.getMinutes(),
+        s: date.getSeconds(),
+        S: date.getMilliseconds()
+    };
+
+    var formatStr = format.replace(/(y+|M+|d+|h+|H+|m+|s+|S+)/g, function (e) {
+        let key = e.slice(-1);
+        if (key == 'S')
+            return ('' + o[key]).slice(0, e.length);
+        else
+            return ((e.length > 1 ? '0' : '') + o[key]).slice(-(e.length > 2 ? e.length : 2));
+    });
+    return formatStr;
+};

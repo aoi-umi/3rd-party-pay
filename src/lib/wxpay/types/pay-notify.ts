@@ -1,4 +1,4 @@
-import * as base from './base';
+import * as base from '../base';
 
 export class Request extends base.Response {
 

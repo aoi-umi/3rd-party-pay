@@ -1,6 +1,6 @@
 //https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 
-import * as base from './base';
+import * as base from '../base';
 
 export class Request extends base.Request {
 

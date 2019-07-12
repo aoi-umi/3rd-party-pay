@@ -1,9 +1,28 @@
 # 3rd-party-pay
 
-```ts
-import * as pay from "3rd-party-pay";
+> import * as pay from "3rd-party-pay";
 
-let wxpay = new pay.WxPay({
+> 可选配置
+```ts
+pay.config({
+    wxpay: {
+        //沙箱
+        sandbox: false,
+        //微信支付host
+        host: '',
+        //沙箱host
+        sandboxHost: '',
+        //记录请求
+        requestLog: (log) => {
+            console.log(log);
+        }
+    }
+});
+```
+
+```ts
+const { wxpay } = pay;
+let wxpayInst = new wxpay.WxPay({
   mch_id: "商户号",
   key: "密钥",
   appid: "公众账号ID",
@@ -14,4 +33,4 @@ let wxpay = new pay.WxPay({
 
 [微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
-> wxpay.orderQuery({ transaction_id: "单号" });
+> wxpayInst.orderQuery({ transaction_id: "单号" });

@@ -2,28 +2,28 @@
 import * as utils from '../utils';
 
 export * from './base';
-import { WxPayStatic, WxPayBase, Path, SignType, BillType } from './base';
+import { WxPayStatic, WxPayBase as WxPayBase, Path, SignType, BillType } from './base';
 //#region 支付接口 
-import * as unifiedOrder from './unified-order';
-import * as orderQuery from './order-query';
-import * as closeOrder from './close-order';
-import * as refund from './refund';
-import * as refundQuery from './refund-query';
-import * as downloadBill from './download-bill';
-import * as payNotify from './pay-notify';
-import * as shortUrl from './short-url';
-import * as microPay from './micro-pay';
-import * as reverse from './reverse';
-import * as authCodeToOpenid from './auth-code-to-openid';
-import * as refundNotify from './refund-notify';
-import * as batchQueryComment from './batch-query-comment';
-import * as downloadFundflow from './download-fundflow';
+import * as unifiedOrder from './types/unified-order';
+import * as orderQuery from './types/order-query';
+import * as closeOrder from './types/close-order';
+import * as refund from './types/refund';
+import * as refundQuery from './types/refund-query';
+import * as downloadBill from './types/download-bill';
+import * as payNotify from './types/pay-notify';
+import * as shortUrl from './types/short-url';
+import * as microPay from './types/micro-pay';
+import * as reverse from './types/reverse';
+import * as authCodeToOpenid from './types/auth-code-to-openid';
+import * as refundNotify from './types/refund-notify';
+import * as batchQueryComment from './types/batch-query-comment';
+import * as downloadFundflow from './types/download-fundflow';
 //#endregion
 
 //#region 企业付款 
 
-import * as transfers from './transfers';
-import * as getTransferInfo from './get-transfer-info';
+import * as transfers from './types/transfers';
+import * as getTransferInfo from './types/get-transfer-info';
 //#endregion
 
 export class WxPay extends WxPayBase {
