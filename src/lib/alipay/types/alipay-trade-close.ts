@@ -67,7 +67,12 @@ export const error = {
 }
 
 export const notify = {
-
+    'tradeStatus.TRADE_CLOSED': {
+        code: 'tradeStatus.TRADE_CLOSED',
+        desc: '交易关闭',
+        enable: '1',
+    },
+    
     'tradeStatus.TRADE_SUCCESS': {
         code: 'tradeStatus.TRADE_SUCCESS',
         desc: '交易成功',

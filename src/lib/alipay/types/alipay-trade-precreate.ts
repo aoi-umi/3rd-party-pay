@@ -9,23 +9,19 @@ export class Request extends base.Request {
     out_trade_no: string;
 
     /**
-     * 卖家支付宝用户ID。
-    如果该值为空，则默认为商户签约账号对应的支付宝用户ID
+     * 卖家支付宝用户ID。 如果该值为空，则默认为商户签约账号对应的支付宝用户ID
      * example: 2088102146225135
      */
     seller_id: string;
 
     /**
-     * 订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
-    如果同时传入了【打折金额】，【不可打折金额】，【订单总金额】三者，则必须满足如下条件：【订单总金额】=【打折金额】+【不可打折金额】
+     * 订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000] 如果同时传入了【打折金额】，【不可打折金额】，【订单总金额】三者，则必须满足如下条件：【订单总金额】=【打折金额】+【不可打折金额】
      * example: 88.88
      */
     total_amount: number;
 
     /**
-     * 可打折金额.
-    参与优惠计算的金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
-    如果该值未传入，但传入了【订单总金额】，【不可打折金额】则该值默认为【订单总金额】-【不可打折金额】
+     * 可打折金额. 参与优惠计算的金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000] 如果该值未传入，但传入了【订单总金额】和【不可打折金额】，则该值默认为【订单总金额】-【不可打折金额】
      * example: 8.88
      */
     discountable_amount: number;
@@ -37,20 +33,7 @@ export class Request extends base.Request {
     subject: string;
 
     /**
-     * 对交易或商品的描述
-     * example: Iphone6 16G
-     */
-    body: string;
-
-    /**
-     * 买家的支付宝唯一用户号（2088开头的16位纯数字）
-     * example: 2088102146225135
-     */
-    buyer_id: string;
-
-    /**
-     * 订单包含的商品列表信息，json格式，其它说明详见：“商品明细说明”
-     * example: [{"goods_id":"apple-01","goods_name":"ipad","goods_category":"7788230","price":"2000.00","quantity":"1"}]
+     * 订单包含的商品列表信息.json格式. 其它说明详见：“商品明细说明”
      */
     goods_detail?: {
 
@@ -104,6 +87,12 @@ export class Request extends base.Request {
     }[];
 
     /**
+     * 对交易或商品的描述
+     * example: Iphone6 16G
+     */
+    body: string;
+
+    /**
      * 销售产品码。如果签约的是当面付快捷版，则传OFFLINE_PAYMENT;其它支付宝当面付产品传FACE_TO_FACE_PAYMENT；不传默认使用FACE_TO_FACE_PAYMENT；
      * example: FACE_TO_FACE_PAYMENT
      */
@@ -111,7 +100,7 @@ export class Request extends base.Request {
 
     /**
      * 商户操作员编号
-     * example: Yx_001
+     * example: yx_001
      */
     operator_id: string;
 
@@ -122,6 +111,24 @@ export class Request extends base.Request {
     store_id: string;
 
     /**
+     * 禁用渠道，用户不可用指定渠道支付
+    当有多个渠道时用“,”分隔
+    注，与enable_pay_channels互斥
+    渠道列表：https://docs.open.alipay.com/common/wifww7
+     * example: pcredit,moneyFund,debitCardExpress
+     */
+    disable_pay_channels: string;
+
+    /**
+     * 可用渠道，用户只能在指定渠道范围内支付
+    当有多个渠道时用“,”分隔
+    注，与disable_pay_channels互斥
+    渠道列表
+     * example: pcredit,moneyFund,debitCardExpress
+     */
+    enable_pay_channels: string;
+
+    /**
      * 商户机具终端编号
      * example: NJ_T_001
      */
@@ -129,7 +136,6 @@ export class Request extends base.Request {
 
     /**
      * 业务扩展参数
-     * example: {“sys_service_provider_id”:” 2088511833207846”}
      */
     extend_params?: {
 
@@ -151,7 +157,7 @@ export class Request extends base.Request {
          * example: S0JP0000
          */
         card_type: string;
-    }
+    };
 
     /**
      * 该笔订单允许的最晚付款时间，逾期将关闭交易。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。 该参数数值不接受小数点， 如 1.5h，可转换为 90m。
@@ -167,7 +173,7 @@ export class Request extends base.Request {
         /**
          * 结算详细信息，json数组，目前只支持一条。
          */
-        settle_detail_infos?: {
+        settle_detail_infos: {
 
             /**
              * 结算收款方的账户类型。cardAliasNo：结算收款方的银行卡编号;userId：表示是支付宝账号对应的支付宝唯一用户号;loginName：表示是支付宝登录号；
@@ -206,30 +212,13 @@ export class Request extends base.Request {
              */
             amount: number;
         }[];
-
-        /**
-         * 商户id类型，
-         * example: alipay: 支付宝分配的间连商户编号, merchant: 商户端的间连商户编号
-         */
-        merchant_type: string;
     }
 
     /**
-     * 物流信息
+     * 商户原始订单号，最大长度限制32位
+     * example: 20161008001
      */
-    logistics_detail?: {
-
-        /**
-         * 物流类型, 
-        POST 平邮,
-        EXPRESS 其他快递,
-        VIRTUAL 虚拟物品,
-        EMS EMS,
-        DIRECT 无需物流。
-         * example: EXPRESS
-         */
-        logistics_type: string;
-    }
+    merchant_order_no: string;
 
     /**
      * 商户传入业务信息，具体值要和支付宝约定，应用于安全，营销等参数直传场景，格式为json格式
@@ -242,59 +231,41 @@ export class Request extends base.Request {
          * example: 0000306634
          */
         campus_card: string;
+
+        /**
+         * 虚拟卡卡类型
+         * example: T0HK0000
+         */
+        card_type: string;
+
+        /**
+         * 实际订单时间，在乘车码场景，传入的是用户刷码乘车时间
+         * example: 2019-05-14 09:18:55
+         */
+        actual_order_time: string;
     }
 
     /**
-     * 收货人及地址信息
+     * 该笔订单允许的最晚付款时间，逾期将关闭交易，从生成二维码开始计时。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。 该参数数值不接受小数点， 如 1.5h，可转换为 90m。
+     * example: 90m
      */
-    receiver_address_info?: {
-
-        /**
-         * 收货人的姓名
-         * example: 张三
-         */
-        name: string;
-
-        /**
-         * 收货地址
-         * example: 上海市浦东新区陆家嘴银城中路501号
-         */
-        address: string;
-
-        /**
-         * 收货人手机号
-         * example: 13120180615
-         */
-        mobile: string;
-
-        /**
-         * 收货地址邮编
-         * example: 200120
-         */
-        zip: string;
-
-        /**
-         * 中国标准城市区域码
-         * example: 310115
-         */
-        division_code: string;
-    }
+    qr_code_timeout_express: string;
 
 }
 
 export class Response extends base.Response {
 
     /**
-     * 商户订单号
-     * example: 20150423001001
+     * 商户的订单号
+     * example: 6823789339978248
      */
     out_trade_no: string;
 
     /**
-     * 支付宝交易号
-     * example: 2015042321001004720200028594
+     * 当前预下单请求生成的二维码码串，可以用二维码生成工具根据该码串值生成对应的二维码
+     * example: https://qr.alipay.com/bavh4wjlxf12tper3a
      */
-    trade_no: string;
+    qr_code: string;
 
 }
 
@@ -315,7 +286,7 @@ export const error = {
     'ACQ.ACCESS_FORBIDDEN': {
         code: 'ACQ.ACCESS_FORBIDDEN',
         desc: '无权限使用接口',
-        resolve: '联系支付宝小二进行签约',
+        resolve: '联系支付宝小二签约',
     },
 
     'ACQ.EXIST_FORBIDDEN_WORD': {
@@ -372,6 +343,30 @@ export const error = {
         resolve: '用户联系支付宝小二，确认买家状态为什么非法',
     },
 
+    'ACQ.BUYER_PAYMENT_AMOUNT_DAY_LIMIT_ERROR': {
+        code: 'ACQ.BUYER_PAYMENT_AMOUNT_DAY_LIMIT_ERROR',
+        desc: '买家付款日限额超限',
+        resolve: '更换买家进行支付',
+    },
+
+    'ACQ.BEYOND_PAY_RESTRICTION': {
+        code: 'ACQ.BEYOND_PAY_RESTRICTION',
+        desc: '商户收款额度超限',
+        resolve: '联系支付宝小二提高限额',
+    },
+
+    'ACQ.BEYOND_PER_RECEIPT_RESTRICTION': {
+        code: 'ACQ.BEYOND_PER_RECEIPT_RESTRICTION',
+        desc: '商户收款金额超过月限额',
+        resolve: '联系支付宝小二提高限额',
+    },
+
+    'ACQ.BUYER_PAYMENT_AMOUNT_MONTH_LIMIT_ERROR': {
+        code: 'ACQ.BUYER_PAYMENT_AMOUNT_MONTH_LIMIT_ERROR',
+        desc: '买家付款月额度超限',
+        resolve: '让买家更换账号后，重新付款或者更换其它付款方式',
+    },
+
     'ACQ.SELLER_BEEN_BLOCKED': {
         code: 'ACQ.SELLER_BEEN_BLOCKED',
         desc: '商家账号被冻结',
@@ -384,21 +379,33 @@ export const error = {
         resolve: '让用户联系支付宝小二并更换其它付款方式',
     },
 
-    'ACQ.SUB_MERCHANT_CREATE_FAIL': {
-        code: 'ACQ.SUB_MERCHANT_CREATE_FAIL',
-        desc: '二级商户创建失败',
-        resolve: '检查上送的二级商户信息是否有效',
-    },
-
-    'ACQ.SUB_MERCHANT_TYPE_INVALID': {
-        code: 'ACQ.SUB_MERCHANT_TYPE_INVALID',
-        desc: '二级商户类型非法',
-        resolve: '检查上传的二级商户类型是否有效',
+    'ACQ.INVALID_STORE_ID': {
+        code: 'ACQ.INVALID_STORE_ID',
+        desc: '商户门店编号无效',
+        resolve: '检查传入的门店编号是否符合规则',
     },
 
 }
 
 export const notify = {
+
+    'tradeStatus.TRADE_CLOSED': {
+        code: 'tradeStatus.TRADE_CLOSED',
+        desc: '交易关闭',
+        enable: '0',
+    },
+
+    'tradeStatus.TRADE_FINISHED': {
+        code: 'tradeStatus.TRADE_FINISHED',
+        desc: '交易完结',
+        enable: '0',
+    },
+
+    'tradeStatus.TRADE_SUCCESS': {
+        code: 'tradeStatus.TRADE_SUCCESS',
+        desc: '支付成功',
+        enable: '1',
+    },
 
     'tradeStatus.WAIT_BUYER_PAY': {
         code: 'tradeStatus.WAIT_BUYER_PAY',

@@ -143,6 +143,18 @@ export const Method = {
 
     //https://docs.open.alipay.com/api_1/alipay.trade.pay
     alipayTradePay: 'alipay.trade.pay',
+
+    //https://docs.open.alipay.com/api_1/alipay.trade.precreate
+    alipayTradePrecreate: 'alipay.trade.precreate',
+
+    //https://docs.open.alipay.com/api_1/alipay.trade.query
+    alipayTradeQuery: 'alipay.trade.query',
+
+    //https://docs.open.alipay.com/api_1/alipay.trade.refund
+    alipayTradeRefund: 'alipay.trade.refund',
+
+    //https://docs.open.alipay.com/api_1/alipay.trade.wap.pay
+    alipayTradeWapPay: 'alipay.trade.wap.pay',
 };
 
 export class AliPayBase {

@@ -34,7 +34,7 @@ exports.convertToClass = function (data, clsName) {
     for (let key in data) {
         let val = data[key];
         let col = [];
-        let returnLine = /\n\s+/;
+        let returnLine = /[\n\r]\s+/;
         let desc = val.desc ? val.desc.replace(returnLine, ';') : '';
         if (isNotify || val.notifyType) {
             isNotify = 'notify';
@@ -144,6 +144,8 @@ exports.parse = async function (url, columnMap) {
                     data.errorCode = data.name;
                 if (data.errorCode)
                     dist[data.errorCode] = data;
+                else if (data.notifyType)
+                    dist[data.notifyType] = data;
                 else {
                     let c = count[data.varName];
                     let suffix = '';
@@ -170,8 +172,8 @@ exports.parse = async function (url, columnMap) {
             repeat.push({ table: i, key: countEnt.join(',') });
         }
     });
-    if (repeat.length)
-        console.log('重复key', url, repeat);
+    // if (repeat.length)
+    //     console.log('重复key', url, repeat);
     if (Object.keys(notMatch).length) {
         console.log(url);
         console.log(`不符合格式` + Object.entries(notMatch).map(([key, val]) => { return '表' + key + ':' + val.join(',') }).join(';'));
