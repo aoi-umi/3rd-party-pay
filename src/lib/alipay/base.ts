@@ -1,4 +1,8 @@
-import { PayStatic } from "../base";
+import * as qs from 'query-string';
+import * as crypto from 'crypto';
+
+import * as utils from '../utils';
+import { PayStatic, SignType, PayStaticConfig } from "../base";
 
 export class RequestBase {
 
@@ -159,6 +163,7 @@ export const Method = {
 
 export class AliPayBase {
     app_id: string;
+    sign_type?: string;
     rsaPrivatePath: string;
     rsaPublicPath: string;
 }
@@ -167,4 +172,79 @@ export class AliPayStatic extends PayStatic {
 
     static host = 'https://openapi.alipay.com/gateway.do';
     static sandboxHost = 'https://openapi.alipaydev.com/gateway.do';
+    static sign_type = SignType.RSA2;
+
+    static config(opt: PayStaticConfig & { sign_type?: string }) {
+        super.config(opt);
+        if (opt.sign_type)
+            this.sign_type = opt.sign_type;
+    }
+    static getSignObj(data, opt: {
+        app_id: string;
+        rsaPrivate: string;
+        method: string;
+        sign_type?: string;
+        notify_url?: string;
+        return_url?: string;
+        withHost?: boolean;
+    }) {
+        let obj = {
+            app_id: opt.app_id,
+            sign_type: opt.sign_type || this.sign_type,
+            notify_url: opt.notify_url,
+            return_url: opt.return_url,
+            format: 'JSON',
+            charset: 'utf-8',
+            timestamp: utils.dateFormat(),
+            version: '1.0',
+            biz_content: JSON.stringify(data),
+            method: opt.method,
+        };
+        let sortObj = utils.sortObject(obj);
+        // console.log(sortObj);
+        let params = this.rsaSign(sortObj, opt.rsaPrivate, obj.sign_type);
+        return (opt.withHost ? this.getHost() + '?' : '') + params;
+    }
+
+    static rsaSign(data: Object, privateKey: string, signType?: string) {
+        let obj = utils.sortObject(data);
+        let stringify = this.stringify(obj);
+        let sign = this.encrypt(stringify.str, privateKey, signType);
+        return stringify.encodeStr + '&sign=' + encodeURIComponent(sign);
+    }
+
+    static stringify(data) {
+        let str = [];
+        let encodeStr = [];
+        Object.entries(data).forEach((ele => {
+            str.push(ele[0] + '=' + ele[1]);
+            encodeStr.push(ele[0] + '=' + encodeURIComponent(ele[1] as any));
+        }));
+        return {
+            str: str.join('&'),
+            encodeStr: encodeStr.join('&'),
+        };
+    }
+
+    static encrypt(str, privateKey, signType?: string) {
+        let sha;
+        if (signType === SignType.RSA2) {
+            sha = crypto.createSign('RSA-SHA256');
+        } else {
+            sha = crypto.createSign('RSA-SHA1');
+        }
+        sha.update(str, 'utf8');
+        return sha.sign(privateKey, 'base64');
+    }
+
+    static signVerify(str, sign, publicKey, signType?: string) {
+        let verify;
+        if (signType === SignType.RSA2) {
+            verify = crypto.createVerify('RSA-SHA256');
+        } else {
+            verify = crypto.createVerify('RSA-SHA1');
+        }
+        verify.update(str, 'utf8');
+        return verify.verify(publicKey, sign, 'base64');
+    }
 }

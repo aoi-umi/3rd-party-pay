@@ -1,9 +1,10 @@
 import * as xml2js from 'xml2js';
-import * as fs from 'fs';
 import * as qs from 'query-string';
 import * as https from 'https';
 import * as crypto from 'crypto';
 import { AxiosRequestConfig } from 'axios';
+import * as md from 'node-forge/lib/md.all';
+import * as hmac from 'node-forge/lib/hmac';
 
 import * as utils from '../utils';
 import { RequestLog, PayStatic } from '../base';
@@ -217,6 +218,7 @@ export class WxPayBase {
     appid: string;
     key: string;
     pfxPath?: string;
+    pfx?: any;
 }
 
 export class WxPayStatic extends PayStatic {
@@ -239,7 +241,7 @@ export class WxPayStatic extends PayStatic {
         path: string;
         method?: string;
         agent?: {
-            pfxPath: string;
+            pfx: string;
             passphrase: string;
         };
         notThrowErr?: boolean;
@@ -261,7 +263,7 @@ export class WxPayStatic extends PayStatic {
             log.req = _xml;
             if (opt.agent) {
                 reqData.httpsAgent = new https.Agent({
-                    pfx: fs.readFileSync(opt.agent.pfxPath),
+                    pfx: opt.agent.pfx,
                     passphrase: opt.agent.passphrase
                 });
             }
@@ -325,17 +327,22 @@ export class WxPayStatic extends PayStatic {
         encrypt?: string;
     }) {
         opt = { ...opt };
-        let obj = utils.sortObject(signObj);
-        let signStr = qs.stringify(obj, { encode: false });
-        // console.log(signStr);
-        signStr += '&key=' + opt.key;
-        let sign = utils.encrypt(signStr, opt.encrypt as any, opt.key).toUpperCase();
+        let signStr = this.stringify(signObj, opt.key);
+        let sign = this.encrypt(signStr, opt.encrypt as any, opt.key);
         return sign;
     }
 
-    static async getSignObj(signObj, opt: WxPayBase & { mch?: boolean }) {
+    static stringify(signObj, key) {
+        let obj = utils.sortObject(signObj);
+        let signStr = qs.stringify(obj, { encode: false });
+        // console.log(signStr);
+        signStr += '&key=' + key;
+        return signStr;
+    }
+
+    static async getSignObj(data, opt: WxPayBase & { mch?: boolean }) {
         let key = opt.key;
-        let obj = utils.clone(signObj) as Sign & {
+        let obj = utils.clone(data) as Sign & {
             mch_id?: string; appid?: string;
         } & {
             mchid?: string; mch_appid?: string
@@ -357,16 +364,27 @@ export class WxPayStatic extends PayStatic {
             key = rs.sandbox_signkey;
         }
         obj.nonce_str = utils.randomString();
-        for (let key in obj) {
-            if ([undefined, null, ''].includes(obj[key]))
-                delete obj[key];
-        }
-        let encrypt = 'md5';
-        if (obj.sign_type == SignType.HMAC_SHA256) {
-            encrypt = 'sha256';
-        }
-        obj.sign = this.createSign(obj, { key, encrypt });
+        obj.sign = this.createSign(obj, { key, encrypt: obj.sign_type });
         return obj;
+    }
+
+    static encrypt(str: string, type: string, key?: string) {
+        let encrypt = md.md5;
+        let isHmac = false;
+        if (type == SignType.HMAC_SHA256) {
+            encrypt = hmac;
+            isHmac = true;
+        }
+        let en = encrypt.create();
+        if (isHmac)
+            en.start(type, key);
+        en.update(str, 'utf8');
+        return en.digest().toHex().toUpperCase();
+    }
+
+    static signVerify(str: string, sign: string, type: string, key?: string) {
+        let newSign = this.encrypt(str, type, key);
+        return newSign === sign;
     }
 
     static decrypt(key, crypted, iv = '', to: crypto.HexBase64BinaryEncoding = 'hex') {

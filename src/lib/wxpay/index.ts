@@ -1,8 +1,8 @@
-
+import * as fs from 'fs';
 import * as utils from '../utils';
 
 export * from './base';
-import { WxPayStatic, WxPayBase as WxPayBase, Path, SignType, BillType } from './base';
+import { WxPayStatic, WxPayBase as WxPayBase, Path, SignType, BillType, ResponseBase } from './base';
 //#region 支付接口 
 import * as unifiedOrder from './types/unified-order';
 import * as orderQuery from './types/order-query';
@@ -24,6 +24,7 @@ import * as downloadFundflow from './types/download-fundflow';
 
 import * as transfers from './types/transfers';
 import * as getTransferInfo from './types/get-transfer-info';
+import { RequestLog, PayStatic } from '../base';
 //#endregion
 
 export class WxPay extends WxPayBase {
@@ -33,6 +34,7 @@ export class WxPay extends WxPayBase {
         this.appid = opt.appid;
         this.key = opt.key;
         this.pfxPath = opt.pfxPath;
+        this.pfx = fs.readFileSync(this.pfxPath);
     }
 
     private signOpt() {
@@ -40,7 +42,7 @@ export class WxPay extends WxPayBase {
     }
 
     private agentOpt() {
-        return { pfxPath: this.pfxPath, passphrase: this.mch_id };
+        return { pfx: this.pfx, passphrase: this.mch_id };
     }
 
     //#region 支付接口 
@@ -84,16 +86,27 @@ export class WxPay extends WxPayBase {
         return rs;
     }
 
-    async payNotifyHandler(req: string | payNotify.Request, fn: (req: payNotify.Request) => payNotify.Response) {
-        let data = req as payNotify.Request;
-        if (typeof req === 'string') {
-            data = await WxPayStatic.parseXml(req);
-        }
-        let rs: payNotify.Response;
+    private async notifyHandler(req, fn: (req) => any) {
+        let rs: ResponseBase;
+        let log: RequestLog = {
+            success: true,
+            orginReq: req,
+        };
         try {
-            rs = await fn(data);
+            if (typeof req === 'string') {
+                req = await WxPayStatic.parseXml(req);
+            }
+            log.req = req;
+            let { sign, ...rest } = req;
+            let verify = WxPayStatic.signVerify(WxPayStatic.stringify(rest, this.key), sign, rest.sign_type, this.key);
+            if (!verify) {
+                throw new Error('校验签名不正确');
+            }
+            rs = await fn(req);
         } catch (e) {
             console.error(e);
+            log.success = false;
+            log.msg = e.message;
             rs = {
                 return_code: 'FAIL',
                 return_msg: 'FAIL',
@@ -105,7 +118,17 @@ export class WxPay extends WxPayBase {
                 return_msg: 'OK',
             };
         }
-        return WxPayStatic.buildXml(rs);
+        log.orginRes = rs;
+        let xmlRs = WxPayStatic.buildXml(rs);
+        log.res = xmlRs;
+        PayStatic.requestLog && PayStatic.requestLog(log);
+        return xmlRs;
+    }
+
+    async payNotifyHandler(req: string | payNotify.Request, fn: (req: payNotify.Request) => payNotify.Response) {
+        return this.notifyHandler(req, async (data) => {
+            return await fn(data);
+        });
     }
 
     //不知道咋用,现在Native返回的就是短链接?
@@ -137,31 +160,13 @@ export class WxPay extends WxPayBase {
     //report
 
     async refundNotifyHandler(req: string | refundNotify.Request, fn: (req: refundNotify.Request) => refundNotify.Response) {
-        let data = req as refundNotify.Request;
-        if (typeof req === 'string') {
-            data = await WxPayStatic.parseXml(req);
-        }
-        let key = utils.encrypt(this.key, 'md5');
-        let reqInfo = WxPayStatic.decrypt(key, data.req_info);
-        let parse = await WxPayStatic.parseXml<{ root: refundNotify.RequestInfo }>(reqInfo, true);
-        data.req_info = parse.root;
-        let rs: refundNotify.Response;
-        try {
-            rs = await fn(data);
-        } catch (e) {
-            console.error(e);
-            rs = {
-                return_code: 'FAIL',
-                return_msg: 'FAIL',
-            };
-        }
-        if (!rs) {
-            rs = {
-                return_code: 'SUCCESS',
-                return_msg: 'OK',
-            };
-        }
-        return WxPayStatic.buildXml(rs);
+        return this.notifyHandler(req, async (data) => {
+            let key = WxPayStatic.encrypt(this.key, 'md5');
+            let reqInfo = WxPayStatic.decrypt(key, data.req_info);
+            let parse = await WxPayStatic.parseXml<{ root: refundNotify.RequestInfo }>(reqInfo, true);
+            data.req_info = parse.root;
+            return await fn(data);
+        });
     }
 
     async batchQueryComment(data: batchQueryComment.Request) {

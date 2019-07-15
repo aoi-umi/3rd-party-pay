@@ -8,6 +8,13 @@ export interface RequestLog {
     msg?: string;
 }
 
+export type PayStaticConfig = {
+    sandbox?: boolean;
+    host?: string;
+    sandboxHost?: string;
+    requestLog: (log: RequestLog) => any;
+};
+
 export abstract class PayStatic {
     static sandbox = false;
     static host = '';
@@ -19,6 +26,18 @@ export abstract class PayStatic {
 
     static requestLog(log: RequestLog) {
         console.log(log);
+    }
+
+    static config(opt: PayStaticConfig) {
+        if (typeof opt.sandbox !== 'undefined') {
+            this.sandbox = opt.sandbox;
+        }
+        if (opt.host)
+            this.host = opt.host;
+        if (opt.sandboxHost)
+            this.sandboxHost = opt.sandboxHost;
+        if (opt.requestLog)
+            this.requestLog = opt.requestLog;
     }
 }
 
