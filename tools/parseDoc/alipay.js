@@ -4,11 +4,17 @@ const utils = require('../utils');
 
 const columnMap = {
     参数: 'varName',
+    参数名称: 'name',
     类型: 'type',
     是否必填: 'required',
+    必填: 'required',
+    是否可为空: 'canNull',
     最大长度: 'maxLength',
     描述: 'desc',
+    参数说明: 'desc',
     示例值: 'example',
+    范例: 'example',
+    样例: 'example',
 
     错误码: 'errorCode',
     错误描述: 'desc',
@@ -78,8 +84,17 @@ let menu = {
     "slug": "api_1"
 };
 let doc = 'https://docs.open.alipay.com';
+
 let dict = {
     pay: menu,
+    notify: {
+        slug: '',
+        pages: [{
+            slug: '/194/103296',
+            key: 'notify'
+        }]
+
+    }
 };
 
 async function run() {
@@ -92,7 +107,7 @@ async function run() {
                 // if (![0].includes(i))
                 //     return;
                 let url = [doc, menu.slug, page.slug].join('/');
-                let name = utils.toHyphen(page.slug);
+                let name = utils.toHyphen(page.key || page.slug);
                 let parseData = await utils.parse(url, columnMap);
                 // console.log(parseData);
                 let dir = path.resolve(__dirname, '../../_test/_output/ali');

@@ -1,10 +1,15 @@
 import * as fs from 'fs';
 
 import * as utils from '../utils';
-import { AliPayBase, AliPayStatic, Method, RequestBase } from './base';
+import { RequestLog } from '../base';
 
+import { AliPayBase, AliPayStatic, Method, RequestBase, NotifyType } from './base';
 export * from './base';
+
+import * as notify from './types/notify';
 import * as pagePay from './types/alipay-trade-page-pay';
+import * as pay from './types/alipay-trade-pay';
+
 
 export class AliPay extends AliPayBase {
     rsaPrivate: string;
@@ -42,20 +47,36 @@ export class AliPay extends AliPayBase {
 
     private async notifyHandler(req, fn: (req) => any) {
         let rs: string;
+        let log: RequestLog = {
+            success: true,
+            orginReq: req,
+            req: req,
+        };
         try {
+            let { sign, sign_type, ...rest } = req;
+            let str = AliPayStatic.stringify(utils.sortObject(rest)).str;
+            let verify = AliPayStatic.signVerify(str, sign, this.rsaPublic, sign_type);
+            if (!verify) {
+                throw new Error('校验签名不正确');
+            }
             rs = await fn(req);
         } catch (e) {
             console.error(e);
+            log.success = false;
             rs = 'failure';
         }
         if (!rs) {
             rs = 'success';
         }
+        log.res = log.orginRes = rs;
+        AliPayStatic.requestLog && AliPayStatic.requestLog(log);
         return rs;
     }
 
-    async payNotifyHandler(req, fn: (req) => any) {
+    async payNotifyHandler(req: notify.Request, fn: (req: notify.Request) => any) {
         return this.notifyHandler(req, async () => {
+            if (req.fund_bill_list)
+                req.fund_bill_list = JSON.parse(req.fund_bill_list as any);
             await fn(req);
         });
     }

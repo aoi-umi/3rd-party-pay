@@ -1,4 +1,3 @@
-import * as qs from 'query-string';
 import * as crypto from 'crypto';
 
 import * as utils from '../utils';
@@ -114,7 +113,16 @@ export class Response {
 
 }
 
+export type NotifyType = {
+    notify_time: string;
+    notify_id: string;
+    notify_type: string;
+};
+
 export const Method = {
+    //https://docs.open.alipay.com/194/103296
+    //回调接口
+
     //https://docs.open.alipay.com/api_1/alipay.trade.advance.consult
     alipayTradeAdvanceConsult: 'alipay.trade.advance.consult',
 
@@ -244,6 +252,7 @@ export class AliPayStatic extends PayStatic {
         } else {
             verify = crypto.createVerify('RSA-SHA1');
         }
+        console.log(str);
         verify.update(str, 'utf8');
         return verify.verify(publicKey, sign, 'base64');
     }

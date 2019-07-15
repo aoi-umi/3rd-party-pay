@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as utils from '../utils';
 
 export * from './base';
 import { WxPayStatic, WxPayBase as WxPayBase, Path, SignType, BillType, ResponseBase } from './base';
@@ -121,7 +120,7 @@ export class WxPay extends WxPayBase {
         log.orginRes = rs;
         let xmlRs = WxPayStatic.buildXml(rs);
         log.res = xmlRs;
-        PayStatic.requestLog && PayStatic.requestLog(log);
+        WxPayStatic.requestLog && WxPayStatic.requestLog(log);
         return xmlRs;
     }
 

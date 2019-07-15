@@ -68,7 +68,7 @@ exports.convertToClass = function (data, clsName) {
             if (val.example)
                 col.push(' * example: ' + val.example);
             col.push(' */');
-            col.push(`${val.varName}${val.required == '否' ? '?' : ''}: ${getType(val.type)};`);
+            col.push(`${val.varName}${val.required == '否' || val.canNull == '可空' ? '?' : ''}: ${getType(val.type)};`);
         }
         cls.push(col.join('\n'));
     }
