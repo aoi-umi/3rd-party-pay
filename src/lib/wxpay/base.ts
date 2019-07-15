@@ -278,16 +278,16 @@ export class WxPayStatic extends PayStatic {
                 data = data.toString('utf-8');
                 isXml = data.startsWith('<xml>');
             }
-            log.res = data;
             if (!isXml || opt.originalResult)
                 return data as T;
-            let xmlRs: Response = await this.parseXml(data);
+            let parseRs: Response = await this.parseXml(data);
+            log.res = parseRs;
 
             if (!opt.notThrowErr) {
-                this.errorHandler(xmlRs);
+                this.errorHandler(parseRs);
             }
 
-            return xmlRs as any as T;
+            return parseRs as any as T;
         } catch (e) {
             log.success = false;
             log.msg = e.message;
