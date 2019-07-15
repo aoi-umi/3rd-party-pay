@@ -7,6 +7,7 @@ import { AliPayBase, AliPayStatic, Method, RequestBase, NotifyType } from './bas
 export * from './base';
 
 import * as notify from './types/notify';
+import * as cancel from './types/alipay-trade-cancel';
 import * as pagePay from './types/alipay-trade-page-pay';
 import * as pay from './types/alipay-trade-pay';
 
@@ -31,18 +32,6 @@ export class AliPay extends AliPayBase {
             rsaPrivate: this.rsaPrivate,
             rsaPublic: this.rsaPublic,
         };
-    }
-
-    pagePay(data: pagePay.Request, pubReq: Partial<RequestBase>) {
-        return AliPayStatic.getSignObj({
-            product_code: 'FAST_INSTANT_TRADE_PAY',
-            ...data
-        }, {
-                ...this.getSignOpt(),
-                ...pubReq,
-                method: Method.alipayTradePagePay,
-                withHost: true
-            });
     }
 
     private async notifyHandler(req, fn: (req) => any) {
@@ -79,5 +68,30 @@ export class AliPay extends AliPayBase {
                 req.fund_bill_list = JSON.parse(req.fund_bill_list as any);
             await fn(req);
         });
+    }
+
+    async cancel(data: cancel.Request, pubReq: Partial<RequestBase>) {
+        let params = AliPayStatic.getSignObj(data, {
+            ...this.getSignOpt(),
+            ...pubReq,
+            method: Method.alipayTradeCancel,
+        });
+        return AliPayStatic.request<cancel.Response>({
+            path: '?' + params,
+            method: 'get',
+            resDataKey: 'alipay_trade_cancel_response'
+        });
+    }
+
+    pagePay(data: pagePay.Request, pubReq: Partial<RequestBase>) {
+        return AliPayStatic.getSignObj({
+            product_code: 'FAST_INSTANT_TRADE_PAY',
+            ...data
+        }, {
+                ...this.getSignOpt(),
+                ...pubReq,
+                method: Method.alipayTradePagePay,
+                withHost: true
+            });
     }
 }

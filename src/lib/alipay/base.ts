@@ -1,7 +1,8 @@
 import * as crypto from 'crypto';
 
 import * as utils from '../utils';
-import { PayStatic, SignType, PayStaticConfig } from "../base";
+import { PayStatic, SignType, PayStaticConfig, RequestLog } from "../base";
+import { AxiosRequestConfig } from 'axios';
 
 export class RequestBase {
 
@@ -177,7 +178,7 @@ export class AliPayBase {
 }
 
 export class AliPayStatic extends PayStatic {
-
+    static success = '10000';
     static host = 'https://openapi.alipay.com/gateway.do';
     static sandboxHost = 'https://openapi.alipaydev.com/gateway.do';
     static sign_type = SignType.RSA2;
@@ -194,6 +195,7 @@ export class AliPayStatic extends PayStatic {
         sign_type?: string;
         notify_url?: string;
         return_url?: string;
+        app_auth_token?: string;
         withHost?: boolean;
     }) {
         let obj = {
@@ -201,6 +203,7 @@ export class AliPayStatic extends PayStatic {
             sign_type: opt.sign_type || this.sign_type,
             notify_url: opt.notify_url,
             return_url: opt.return_url,
+            app_auth_token: opt.app_auth_token,
             format: 'JSON',
             charset: 'utf-8',
             timestamp: utils.dateFormat(),
@@ -255,5 +258,52 @@ export class AliPayStatic extends PayStatic {
         console.log(str);
         verify.update(str, 'utf8');
         return verify.verify(publicKey, sign, 'base64');
+    }
+
+    static async request<T = any>(opt: {
+        data?: any;
+        host?: string;
+        path?: string;
+        method?: string;
+        notThrowErr?: boolean;
+        resDataKey?: string;
+        originalResult?: boolean;
+    }) {
+        let log: RequestLog = {
+            success: true
+        };
+        try {
+            let url = (opt.host || this.getHost()) + opt.path;
+            log.url = url;
+            log.req = log.orginReq = opt.data;
+            let reqData: AxiosRequestConfig = {
+                url: (opt.host || this.getHost()) + opt.path,
+                method: opt.method as any,
+                data: opt.data,
+            };
+
+            let rs = await utils.request(reqData);
+            let data = rs.data;
+            log.orginRes = data;
+            data = opt.resDataKey ? data[opt.resDataKey] : data;
+            log.res = data;
+
+            if (!opt.notThrowErr) {
+                this.errorHandler(data);
+            }
+
+            return data as any as T;
+        } catch (e) {
+            log.success = false;
+            log.msg = e.message;
+            throw e;
+        } finally {
+            this.requestLog && this.requestLog(log);
+        }
+    }
+
+    static errorHandler(rs: Response) {
+        if (rs.code !== this.success)
+            throw new Error(rs.msg);
     }
 }
