@@ -6,13 +6,13 @@ export class Request extends base.Request {
      * 支付宝交易号，和商户订单号不能同时为空
      * example: 20150320010101001
      */
-    trade_no: string;
+    trade_no?: string;
 
     /**
      * 订单支付时传入的商户订单号,和支付宝交易号不能同时为空。 trade_no,out_trade_no如果同时存在优先取trade_no
      * example: 2014112611001004680073956707
      */
-    out_trade_no: string;
+    out_trade_no?: string;
 
     /**
      * 请求退款接口时，传入的退款请求号，如果在退款请求时未传入，则该值为创建交易时的外部交易号
@@ -25,7 +25,7 @@ export class Request extends base.Request {
     双联通过该参数指定需要查询的交易所属收单机构的pid;
      * example: 2088101117952222
      */
-    org_pid: string;
+    org_pid?: string;
 
 }
 

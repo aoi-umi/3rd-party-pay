@@ -127,6 +127,13 @@ export class AliPay extends AliPayBase {
         });
     }
 
+    async fastpayRefundQuery(data: fastpayRefundQuery.Request, pubReq: Partial<RequestBase>) {
+        return this.request<fastpayRefundQuery.Response>(data, {
+            ...pubReq,
+            method: Method.alipayTradeFastpayRefundQuery,
+        });
+    }
+
     pagePay(data: pagePay.Request, pubReq: Partial<RequestBase>) {
         return AliPayStatic.getSignObj({
             product_code: 'FAST_INSTANT_TRADE_PAY',
@@ -137,5 +144,52 @@ export class AliPay extends AliPayBase {
                 method: Method.alipayTradePagePay,
                 withHost: true
             });
+    }
+
+    //方法名不存在
+    private pageRefund(data: pageRefund.Request, pubReq: Partial<RequestBase>) {
+        return AliPayStatic.getSignObj(data, {
+            ...this.getSignOpt(),
+            ...pubReq,
+            method: Method.alipayTradePageRefund,
+            withHost: true
+        });
+    }
+
+    precreate(data: precreate.Request, pubReq: Partial<RequestBase>) {
+        return AliPayStatic.getSignObj(data, {
+            ...this.getSignOpt(),
+            ...pubReq,
+            method: Method.alipayTradePrecreate,
+        });
+    }
+
+    async query(data: query.Request, pubReq: Partial<RequestBase>) {
+        return this.request<query.Response>(data, {
+            ...pubReq,
+            method: Method.alipayTradeQuery,
+        });
+    }
+
+    async refund(data: refund.Request, pubReq: Partial<RequestBase>) {
+        return this.request<refund.Response>(data, {
+            ...pubReq,
+            method: Method.alipayTradeRefund,
+        });
+    }
+
+    async orderSettle(data: orderSettle.Request, pubReq: Partial<RequestBase>) {
+        return this.request<orderSettle.Response>(data, {
+            ...pubReq,
+            method: Method.alipayTradeOrderSettle,
+        });
+    }
+
+    wapPay(data: wapPay.Request, pubReq: Partial<RequestBase>) {
+        return AliPayStatic.getSignObj(data, {
+            ...this.getSignOpt(),
+            ...pubReq,
+            method: Method.alipayTradeWapPay,
+        });
     }
 }

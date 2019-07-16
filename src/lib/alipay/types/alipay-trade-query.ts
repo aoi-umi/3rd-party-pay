@@ -7,20 +7,20 @@ export class Request extends base.Request {
     trade_no,out_trade_no如果同时存在优先取trade_no
      * example: 20150320010101001
      */
-    out_trade_no: string;
+    out_trade_no?: string;
 
     /**
      * 支付宝交易号，和商户订单号不能同时为空
      * example: 2014112611001004680 073956707
      */
-    trade_no: string;
+    trade_no?: string;
 
     /**
      * 银行间联模式下有用，其它场景请不要使用；
     双联通过该参数指定需要查询的交易所属收单机构的pid;
      * example: 2088101117952222
      */
-    org_pid: string;
+    org_pid?: string;
 
 }
 
