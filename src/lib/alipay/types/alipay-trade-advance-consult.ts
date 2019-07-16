@@ -12,19 +12,19 @@ export class Request extends base.Request {
      * 行业产品信息，咨询是，会从该产品对应的销售方案中获取相关垫资规则配置
      * example: CAR_OWNERS_PARKINGPAY
      */
-    industry_product_code: string;
+    industry_product_code?: string;
 
     /**
      * 子商户id
      * example: 2088102122458832
      */
-    sub_merchant_id: string;
+    sub_merchant_id?: string;
 
     /**
      * 子商户类型
      * example: PARTNER
      */
-    sub_merchant_type: string;
+    sub_merchant_type?: string;
 
 }
 

@@ -6,10 +6,21 @@ import { RequestLog } from '../base';
 import { AliPayBase, AliPayStatic, Method, RequestBase, NotifyType } from './base';
 export * from './base';
 
-import * as notify from './types/notify';
+import * as notify from './types/alipay-notify';
+import * as appPay from './types/alipay-trade-app-pay';
 import * as cancel from './types/alipay-trade-cancel';
+import * as close from './types/alipay-trade-close';
+import * as create from './types/alipay-trade-create';
+import * as fastpayRefundQuery from './types/alipay-trade-fastpay-refund-query';
+import * as orderSettle from './types/alipay-trade-order-settle';
+import * as orderinfoSync from './types/alipay-trade-orderinfo-sync';
 import * as pagePay from './types/alipay-trade-page-pay';
+import * as pageRefund from './types/alipay-trade-page-refund';
 import * as pay from './types/alipay-trade-pay';
+import * as precreate from './types/alipay-trade-precreate';
+import * as query from './types/alipay-trade-query';
+import * as refund from './types/alipay-trade-refund';
+import * as wapPay from './types/alipay-trade-wap-pay';
 
 
 export class AliPay extends AliPayBase {
@@ -32,6 +43,10 @@ export class AliPay extends AliPayBase {
             rsaPrivate: this.rsaPrivate,
             rsaPublic: this.rsaPublic,
         };
+    }
+
+    private createResponseKey(method: string) {
+        return method.replace(/\./g, '_') + '_response';
     }
 
     private async notifyHandler(req, fn: (req) => any) {
@@ -70,16 +85,45 @@ export class AliPay extends AliPayBase {
         });
     }
 
-    async cancel(data: cancel.Request, pubReq: Partial<RequestBase>) {
-        let params = AliPayStatic.getSignObj(data, {
+    private request<T = any>(data: any, pubReq: Partial<RequestBase>): Promise<T> {
+        let opt = {
             ...this.getSignOpt(),
+            ...pubReq,
+        };
+        let params = AliPayStatic.getSignObj(data, opt as any);
+        return AliPayStatic.request({
+            params: params,
+            resDataKey: this.createResponseKey(opt.method),
+        });
+    }
+
+
+    appPay(data: appPay.Request, pubReq: Partial<RequestBase>) {
+        return AliPayStatic.getSignObj(data, {
+            ...this.getSignOpt(),
+            ...pubReq,
+            method: Method.alipayTradeAppPay,
+        });
+    }
+
+    async cancel(data: cancel.Request, pubReq: Partial<RequestBase>) {
+        return this.request<cancel.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeCancel,
         });
-        return AliPayStatic.request<cancel.Response>({
-            path: '?' + params,
-            method: 'get',
-            resDataKey: 'alipay_trade_cancel_response'
+    }
+
+    async close(data: close.Request, pubReq: Partial<RequestBase>) {
+        return this.request<close.Response>(data, {
+            ...pubReq,
+            method: Method.alipayTradeClose,
+        });
+    }
+
+    async create(data: create.Request, pubReq: Partial<RequestBase>) {
+        return this.request<create.Response>(data, {
+            ...pubReq,
+            method: Method.alipayTradeCreate,
         });
     }
 

@@ -263,7 +263,7 @@ export class AliPayStatic extends PayStatic {
     static async request<T = any>(opt: {
         data?: any;
         host?: string;
-        path?: string;
+        params?: string;
         method?: string;
         notThrowErr?: boolean;
         resDataKey?: string;
@@ -273,11 +273,11 @@ export class AliPayStatic extends PayStatic {
             success: true
         };
         try {
-            let url = (opt.host || this.getHost()) + opt.path;
+            let url = (opt.host || this.getHost()) + (opt.params ? '?' + opt.params : '');
             log.url = url;
             log.req = log.orginReq = opt.data;
             let reqData: AxiosRequestConfig = {
-                url: (opt.host || this.getHost()) + opt.path,
+                url: url,
                 method: opt.method as any,
                 data: opt.data,
             };
@@ -306,6 +306,6 @@ export class AliPayStatic extends PayStatic {
 
     static errorHandler(rs: Response) {
         if (rs.code !== this.success)
-            throw new Error(rs.msg);
+            throw new Error(rs.sub_msg || rs.msg);
     }
 }

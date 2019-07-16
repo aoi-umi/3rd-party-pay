@@ -13,7 +13,7 @@ export class Request extends base.Request {
     如果该值为空，则默认为商户签约账号对应的支付宝用户ID
      * example: 2088102146225135
      */
-    seller_id: string;
+    seller_id?: string;
 
     /**
      * 订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
@@ -28,7 +28,7 @@ export class Request extends base.Request {
     如果该值未传入，但传入了【订单总金额】，【不可打折金额】则该值默认为【订单总金额】-【不可打折金额】
      * example: 8.88
      */
-    discountable_amount: number;
+    discountable_amount?: number;
 
     /**
      * 订单标题
@@ -40,7 +40,7 @@ export class Request extends base.Request {
      * 对交易或商品的描述
      * example: Iphone6 16G
      */
-    body: string;
+    body?: string;
 
     /**
      * 买家的支付宝唯一用户号（2088开头的16位纯数字）
@@ -82,50 +82,50 @@ export class Request extends base.Request {
          * 商品类目
          * example: 34543238
          */
-        goods_category: string;
+        goods_category?: string;
 
         /**
          * 商品类目树，从商品类目根节点到叶子节点的类目id组成，类目id值使用|分割
          * example: 124868003|126232002|126252004
          */
-        categories_tree: string;
+        categories_tree?: string;
 
         /**
          * 商品描述信息
          * example: 特价手机
          */
-        body: string;
+        body?: string;
 
         /**
          * 商品的展示地址
          * example: http://www.alipay.com/xxx.jpg
          */
-        show_url: string;
+        show_url?: string;
     }[];
 
     /**
      * 销售产品码。如果签约的是当面付快捷版，则传OFFLINE_PAYMENT;其它支付宝当面付产品传FACE_TO_FACE_PAYMENT；不传默认使用FACE_TO_FACE_PAYMENT；
      * example: FACE_TO_FACE_PAYMENT
      */
-    product_code: string;
+    product_code?: string;
 
     /**
      * 商户操作员编号
      * example: Yx_001
      */
-    operator_id: string;
+    operator_id?: string;
 
     /**
      * 商户门店编号
      * example: NJ_001
      */
-    store_id: string;
+    store_id?: string;
 
     /**
      * 商户机具终端编号
      * example: NJ_T_001
      */
-    terminal_id: string;
+    terminal_id?: string;
 
     /**
      * 业务扩展参数
@@ -138,26 +138,26 @@ export class Request extends base.Request {
         该参数作为系统商返佣数据提取的依据，请填写系统商签约协议的PID
          * example: 2088511833207846
          */
-        sys_service_provider_id: string;
+        sys_service_provider_id?: string;
 
         /**
          * 行业数据回流信息, 详见：地铁支付接口参数补充说明
          * example: {\"scene_code\":\"metro_tradeorder\",\"channel\":\"xxxx\",\"scene_data\":{\"asset_name\":\"ALIPAY\"}}
          */
-        industry_reflux_info: string;
+        industry_reflux_info?: string;
 
         /**
          * 卡类型
          * example: S0JP0000
          */
-        card_type: string;
+        card_type?: string;
     }
 
     /**
      * 该笔订单允许的最晚付款时间，逾期将关闭交易。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。 该参数数值不接受小数点， 如 1.5h，可转换为 90m。
      * example: 90m
      */
-    timeout_express: string;
+    timeout_express?: string;
 
     /**
      * 描述结算信息，json格式，详见结算参数说明
@@ -185,20 +185,20 @@ export class Request extends base.Request {
              * 结算汇总维度，按照这个维度汇总成批次结算，由商户指定。目前需要和结算收款方账户类型为cardAliasNo配合使用
              * example: A0001
              */
-            summary_dimension: string;
+            summary_dimension?: string;
 
             /**
              * 结算主体标识。当结算主体类型为SecondMerchant时，为二级商户的SecondMerchantID；当结算主体类型为Store时，为门店的外标。
              * example: 2088xxxxx;ST_0001
              */
-            settle_entity_id: string;
+            settle_entity_id?: string;
 
             /**
              * 结算主体类型。
             二级商户:SecondMerchant;商户或者直连商户门店:Store
              * example: SecondMerchant、Store
              */
-            settle_entity_type: string;
+            settle_entity_type?: string;
 
             /**
              * 结算的金额，单位为元。目前必须和交易金额相同
@@ -211,7 +211,7 @@ export class Request extends base.Request {
          * 商户id类型，
          * example: alipay: 支付宝分配的间连商户编号, merchant: 商户端的间连商户编号
          */
-        merchant_type: string;
+        merchant_type?: string;
     }
 
     /**
@@ -228,7 +228,7 @@ export class Request extends base.Request {
         DIRECT 无需物流。
          * example: EXPRESS
          */
-        logistics_type: string;
+        logistics_type?: string;
     }
 
     /**
@@ -241,7 +241,7 @@ export class Request extends base.Request {
          * 校园卡编号
          * example: 0000306634
          */
-        campus_card: string;
+        campus_card?: string;
     }
 
     /**
@@ -253,31 +253,31 @@ export class Request extends base.Request {
          * 收货人的姓名
          * example: 张三
          */
-        name: string;
+        name?: string;
 
         /**
          * 收货地址
          * example: 上海市浦东新区陆家嘴银城中路501号
          */
-        address: string;
+        address?: string;
 
         /**
          * 收货人手机号
          * example: 13120180615
          */
-        mobile: string;
+        mobile?: string;
 
         /**
          * 收货地址邮编
          * example: 200120
          */
-        zip: string;
+        zip?: string;
 
         /**
          * 中国标准城市区域码
          * example: 310115
          */
-        division_code: string;
+        division_code?: string;
     }
 
 }

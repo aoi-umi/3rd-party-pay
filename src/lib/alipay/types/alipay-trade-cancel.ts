@@ -6,13 +6,13 @@ export class Request extends base.Request {
      * 原支付请求的商户订单号,和支付宝交易号不能同时为空
      * example: 20150320010101001
      */
-    out_trade_no: string;
+    out_trade_no?: string;
 
     /**
      * 支付宝交易号，和商户订单号不能同时为空
      * example: 2014112611001004680073956707
      */
-    trade_no: string;
+    trade_no?: string;
 
 }
 
