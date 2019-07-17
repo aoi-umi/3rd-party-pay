@@ -33,7 +33,7 @@ let wxpayInst = new wxpay.WxPay({
 > wxpayInst.orderQuery({ transaction_id: "单号" });
 
 ```ts
-let alipayInst = new alipay.WxPay({
+let alipayInst = new alipay.AliPay({
   app_id: "应用ID",
   rsaPrivatePath: "rsa私钥",
   rsaPublicPath: "rsa公钥"
@@ -43,7 +43,7 @@ let alipayInst = new alipay.WxPay({
 [阿里支付文档](https://docs.open.alipay.com/api_1/alipay.trade.page.pay/)
 
 ```ts
-alipayInst.pagePay(
+let url = alipayInst.pagePay(
   {
     out_trade_no: "单号",
     subject: "测试",
@@ -55,4 +55,5 @@ alipayInst.pagePay(
     notify_url: "通知地址"
   }
 );
+//浏览器上打开url扫码支付
 ```

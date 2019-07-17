@@ -12,7 +12,7 @@ export class Request extends base.Request {
      * 原始业务请求单号。如对某一次退款进行履约时，该字段传退款时的退款请求号
      * example: HZ01RF001
      */
-    orig_request_no: string;
+    orig_request_no?: string;
 
     /**
      * 标识一笔交易多次请求，同一笔交易多次信息同步时需要保证唯一
@@ -39,7 +39,7 @@ export class Request extends base.Request {
     适用场景：如果用户在约定时间（具体根据行业约定，有一定宽限期）内未完成订单支付，反馈该状态，芝麻将对用户记录一条负面记录，请谨慎使用；
      * example: "{\"status\":\"COMPLETE\"}"
      */
-    order_biz_info: string;
+    order_biz_info?: string;
 
 }
 

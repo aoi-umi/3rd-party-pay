@@ -30,6 +30,7 @@ export class AliPay extends AliPayBase {
         super();
         this.app_id = opt.app_id;
         this.sign_type = opt.sign_type;
+        this.notify_url = opt.notify_url;
         this.rsaPrivatePath = opt.rsaPrivatePath;
         this.rsaPublicPath = opt.rsaPublicPath;
         this.rsaPrivate = fs.readFileSync(this.rsaPrivatePath, 'utf-8');
@@ -40,6 +41,7 @@ export class AliPay extends AliPayBase {
         return {
             app_id: this.app_id,
             sign_type: this.sign_type,
+            notify_url: this.notify_url,
             rsaPrivate: this.rsaPrivate,
             rsaPublic: this.rsaPublic,
         };
@@ -90,13 +92,12 @@ export class AliPay extends AliPayBase {
             ...this.getSignOpt(),
             ...pubReq,
         };
-        let params = AliPayStatic.getSignObj(data, opt as any);
         return AliPayStatic.request({
-            params: params,
+            data,
+            pubReq: opt as any,
             resDataKey: this.createResponseKey(opt.method),
         });
     }
-
 
     appPay(data: appPay.Request, pubReq: Partial<RequestBase>) {
         return AliPayStatic.getSignObj(data, {
@@ -157,8 +158,7 @@ export class AliPay extends AliPayBase {
     }
 
     precreate(data: precreate.Request, pubReq: Partial<RequestBase>) {
-        return AliPayStatic.getSignObj(data, {
-            ...this.getSignOpt(),
+        return this.request<precreate.Response>(data, {
             ...pubReq,
             method: Method.alipayTradePrecreate,
         });

@@ -6,13 +6,13 @@ export class Request extends base.Request {
      * 订单支付时传入的商户订单号,不能和 trade_no同时为空。
      * example: 20150320010101001
      */
-    out_trade_no: string;
+    out_trade_no?: string;
 
     /**
      * 支付宝交易号，和商户订单号不能同时为空
      * example: 2014112611001004680073956707
      */
-    trade_no: string;
+    trade_no?: string;
 
     /**
      * 需要退款的金额，该金额不能大于订单金额,单位为元，支持两位小数
@@ -24,37 +24,37 @@ export class Request extends base.Request {
      * 订单退款币种信息
      * example: USD
      */
-    refund_currency: string;
+    refund_currency?: string;
 
     /**
      * 退款的原因说明
      * example: 正常退款
      */
-    refund_reason: string;
+    refund_reason?: string;
 
     /**
      * 标识一次退款请求，同一笔交易多次退款需要保证唯一，如需部分退款，则此参数必传。
      * example: HZ01RF001
      */
-    out_request_no: string;
+    out_request_no?: string;
 
     /**
      * 商户的操作员编号
      * example: OP001
      */
-    operator_id: string;
+    operator_id?: string;
 
     /**
      * 商户的门店编号
      * example: NJ_S_001
      */
-    store_id: string;
+    store_id?: string;
 
     /**
      * 商户的终端编号
      * example: NJ_T_001
      */
-    terminal_id: string;
+    terminal_id?: string;
 
     /**
      * 退款包含的商品列表信息，Json格式。
@@ -72,7 +72,7 @@ export class Request extends base.Request {
          * 支付宝定义的统一商品编号
          * example: 20010001
          */
-        alipay_goods_id: string;
+        alipay_goods_id?: string;
 
         /**
          * 商品名称
@@ -96,25 +96,25 @@ export class Request extends base.Request {
          * 商品类目
          * example: 34543238
          */
-        goods_category: string;
+        goods_category?: string;
 
         /**
          * 商品类目树，从商品类目根节点到叶子节点的类目id组成，类目id值使用|分割
          * example: 124868003|126232002|126252004
          */
-        categories_tree: string;
+        categories_tree?: string;
 
         /**
          * 商品描述信息
          * example: 特价手机
          */
-        body: string;
+        body?: string;
 
         /**
          * 商品的展示地址
          * example: http://www.alipay.com/xxx.jpg
          */
-        show_url: string;
+        show_url?: string;
     }[];
 
     /**
@@ -129,25 +129,25 @@ export class Request extends base.Request {
         为空默认为分账transfer;
          * example: transfer
          */
-        royalty_type: string;
+        royalty_type?: string;
 
         /**
          * 支出方账户。如果支出方账户类型为userId，本参数为支出方的支付宝账号对应的支付宝唯一用户号，以2088开头的纯16位数字；如果支出方类型为loginName，本参数为支出方的支付宝登录号；
          * example: 2088101126765726
          */
-        trans_out: string;
+        trans_out?: string;
 
         /**
          * 支出方账户类型。userId表示是支付宝账号对应的支付宝唯一用户号;loginName表示是支付宝登录号；
          * example: userId
          */
-        trans_out_type: string;
+        trans_out_type?: string;
 
         /**
          * 收入方账户类型。userId表示是支付宝账号对应的支付宝唯一用户号;cardAliasNo表示是卡编号;loginName表示是支付宝登录号；
          * example: userId
          */
-        trans_in_type: string;
+        trans_in_type?: string;
 
         /**
          * 收入方账户。如果收入方账户类型为userId，本参数为收入方的支付宝账号对应的支付宝唯一用户号，以2088开头的纯16位数字；如果收入方类型为cardAliasNo，本参数为收入方在支付宝绑定的卡编号；如果收入方类型为loginName，本参数为收入方的支付宝登录号；
@@ -159,19 +159,19 @@ export class Request extends base.Request {
          * 分账的金额，单位为元
          * example: 0.1
          */
-        amount: number;
+        amount?: number;
 
         /**
          * 分账信息中分账百分比。取值范围为大于0，少于或等于100的整数。
          * example: 100
          */
-        amount_percentage: number;
+        amount_percentage?: number;
 
         /**
          * 分账描述
          * example: 分账给2088101126708402
          */
-        desc: string;
+        desc?: string;
     }[];
 
     /**
@@ -179,7 +179,7 @@ export class Request extends base.Request {
     双联通过该参数指定需要退款的交易所属收单机构的pid;
      * example: 2088101117952222
      */
-    org_pid: string;
+    org_pid?: string;
 
 }
 

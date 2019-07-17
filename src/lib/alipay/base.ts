@@ -110,7 +110,7 @@ export class Response {
      * 签名,详见文档
      * example: DZXh8eeTuAHoYE3w1J+POiPhfDxOYBfUNn1lkeT/V7P4zJdyojWEa6IZs6Hz0yDW5Cp/viufUb5I0/V5WENS3OYR8zRedqo6D+fUTdLHdc+EFyCkiQhBxIzgngPdPdfp1PIS7BdhhzrsZHbRqb7o4k3Dxc+AAnFauu4V6Zdwczo=
      */
-    sign: string;
+    // sign: string;
 
 }
 
@@ -173,6 +173,7 @@ export const Method = {
 export class AliPayBase {
     app_id: string;
     sign_type?: string;
+    notify_url: string;
     rsaPrivatePath: string;
     rsaPublicPath: string;
 }
@@ -261,9 +262,9 @@ export class AliPayStatic extends PayStatic {
     }
 
     static async request<T = any>(opt: {
-        data?: any;
+        data: any;
+        pubReq: RequestBase;
         host?: string;
-        params?: string;
         method?: string;
         notThrowErr?: boolean;
         resDataKey?: string;
@@ -273,9 +274,10 @@ export class AliPayStatic extends PayStatic {
             success: true
         };
         try {
-            let url = (opt.host || this.getHost()) + (opt.params ? '?' + opt.params : '');
-            log.url = url;
             log.req = log.orginReq = opt.data;
+            let params = AliPayStatic.getSignObj(opt.data, opt.pubReq as any);
+            let url = (opt.host || this.getHost()) + '?' + params;
+            log.url = url;
             let reqData: AxiosRequestConfig = {
                 url: url,
                 method: opt.method as any,
@@ -305,7 +307,11 @@ export class AliPayStatic extends PayStatic {
     }
 
     static errorHandler(rs: Response) {
-        if (rs.code !== this.success)
-            throw new Error(rs.sub_msg || rs.msg);
+        if (rs.code !== this.success) {
+            let err = new Error(rs.sub_msg || rs.msg);
+            err['code'] = rs.code;
+            err['sub_code'] = rs.sub_code;
+            throw err;
+        }
     }
 }

@@ -298,10 +298,17 @@ export class WxPayStatic extends PayStatic {
     }
 
     static errorHandler(rs: Response) {
-        if (rs.return_code !== WxPayStatic.success)
-            throw new Error(rs.return_msg);
+        if (rs.return_code !== WxPayStatic.success) {
+            let err = new Error(rs.return_msg);
+            if (rs.err_code)
+                err['err_code'] = rs.err_code;
+            throw err;
+        }
         if (rs.result_code && rs.result_code !== WxPayStatic.success) {
-            throw new Error(rs.err_code_des);
+            let err = new Error(rs.err_code_des);
+            if (rs.err_code)
+                err['err_code'] = rs.err_code;
+            throw err;
         }
     }
 

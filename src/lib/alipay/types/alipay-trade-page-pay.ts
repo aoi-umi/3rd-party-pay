@@ -31,13 +31,13 @@ export class Request extends base.Request {
      * 商品描述信息
      * example: 特价手机
      */
-    body: string;
+    body?: string;
 
     /**
      * 绝对超时时间，格式为yyyy-MM-dd HH:mm:ss
      * example: 2016-12-31 10:05:01
      */
-    time_expire: string;
+    time_expire?: string;
 
     /**
      * 订单包含的商品列表信息，json格式，其它说明详见商品明细说明
@@ -54,7 +54,7 @@ export class Request extends base.Request {
          * 支付宝定义的统一商品编号
          * example: 20010001
          */
-        alipay_goods_id: string;
+        alipay_goods_id?: string;
 
         /**
          * 商品名称
@@ -78,26 +78,26 @@ export class Request extends base.Request {
          * 商品类目
          * example: 34543238
          */
-        goods_category: string;
+        goods_category?: string;
 
         /**
          * 商品类目树，从商品类目根节点到叶子节点的类目id组成，类目id值使用|分割
          * example: 124868003|126232002|126252004
          */
-        categories_tree: string;
+        categories_tree?: string;
 
         /**
          * 商品的展示地址
          * example: http://www.alipay.com/xxx.jpg
          */
-        show_url: string;
+        show_url?: string;
     }[];
 
     /**
      * 公用回传参数，如果请求时传递了该参数，则返回给商户时会回传该参数。支付宝只会在同步返回（包括跳转回商户网站）和异步通知时将该参数原样返回。本参数必须进行UrlEncode之后才可以发送给支付宝。
      * example: merchantBizType%3d3C%26merchantBizNo%3d2016010101111
      */
-    passback_params: string;
+    passback_params?: string;
 
     /**
      * 业务扩展参数
@@ -109,31 +109,31 @@ export class Request extends base.Request {
         该参数作为系统商返佣数据提取的依据，请填写系统商签约协议的PID
          * example: 2088511833207846
          */
-        sys_service_provider_id: string;
+        sys_service_provider_id?: string;
 
         /**
          * 使用花呗分期要进行的分期数
          * example: 3
          */
-        hb_fq_num: string;
+        hb_fq_num?: string;
 
         /**
          * 使用花呗分期需要卖家承担的手续费比例的百分值，传入100代表100%
          * example: 100
          */
-        hb_fq_seller_percent: string;
+        hb_fq_seller_percent?: string;
 
         /**
          * 行业数据回流信息, 详见：地铁支付接口参数补充说明
          * example: {\"scene_code\":\"metro_tradeorder\",\"channel\":\"xxxx\",\"scene_data\":{\"asset_name\":\"ALIPAY\"}}
          */
-        industry_reflux_info: string;
+        industry_reflux_info?: string;
 
         /**
          * 卡类型
          * example: S0JP0000
          */
-        card_type: string;
+        card_type?: string;
     }
 
     /**
@@ -141,13 +141,13 @@ export class Request extends base.Request {
     注：虚拟类商品不支持使用花呗渠道
      * example: 0
      */
-    goods_type: string;
+    goods_type?: string;
 
     /**
      * 该笔订单允许的最晚付款时间，逾期将关闭交易。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。 该参数数值不接受小数点， 如 1.5h，可转换为 90m
      * example: 90m
      */
-    timeout_express: string;
+    timeout_express?: string;
 
     /**
      * 签约营销参数，此值为json格式；具体的key需与营销约定
@@ -165,7 +165,7 @@ export class Request extends base.Request {
         卖家的分账类型，目前只支持传入ROYALTY（普通分账类型）。
          * example: ROYALTY
          */
-        royalty_type: string;
+        royalty_type?: string;
 
         /**
          * 分账明细的信息，可以描述多条分账指令，json数组。
@@ -176,13 +176,13 @@ export class Request extends base.Request {
              * 分账序列号，表示分账执行的顺序，必须为正整数
              * example: 1
              */
-            serial_no: number;
+            serial_no?: number;
 
             /**
              * 结算收款方的账户类型。cardAliasNo：结算收款方的银行卡编号;userId：表示是支付宝账号对应的支付宝唯一用户号;loginName：表示是支付宝登录号；
              * example: cardAliasNo
              */
-            trans_in_type: string;
+            trans_in_type?: string;
 
             /**
              * 分账批次号
@@ -197,7 +197,7 @@ export class Request extends base.Request {
             如果为空，该值则默认为“商户网站唯一订单号+分账序列号”
              * example: 20131124001
              */
-            out_relation_id: string;
+            out_relation_id?: string;
 
             /**
              * 要分账的账户类型。
@@ -229,7 +229,7 @@ export class Request extends base.Request {
              * 分账描述信息
              * example: 分账测试1
              */
-            desc: string;
+            desc?: string;
 
             /**
              * 分账的比例，值为20代表按20%的比例分账
@@ -254,14 +254,14 @@ export class Request extends base.Request {
          * 商户id类型，
          * example: alipay: 支付宝分配的间连商户编号, merchant: 商户端的间连商户编号
          */
-        merchant_type: string;
+        merchant_type?: string;
     }
 
     /**
      * 商户原始订单号，最大长度限制32位
      * example: 20161008001
      */
-    merchant_order_no: string;
+    merchant_order_no?: string;
 
     /**
      * 可用渠道,用户只能在指定渠道范围内支付，多个渠道以逗号分割
@@ -269,13 +269,13 @@ export class Request extends base.Request {
     渠道列表：https://docs.open.alipay.com/common/wifww7
      * example: pcredit,moneyFund,debitCardExpress
      */
-    enable_pay_channels: string;
+    enable_pay_channels?: string;
 
     /**
      * 商户门店编号
      * example: NJ_001
      */
-    store_id: string;
+    store_id?: string;
 
     /**
      * 禁用渠道,用户不可用指定渠道支付，多个渠道以逗号分割
@@ -283,7 +283,7 @@ export class Request extends base.Request {
     渠道列表：https://docs.open.alipay.com/common/wifww7
      * example: pcredit,moneyFund,debitCardExpress
      */
-    disable_pay_channels: string;
+    disable_pay_channels?: string;
 
     /**
      * PC扫码支付的方式，支持前置模式和
@@ -300,14 +300,14 @@ export class Request extends base.Request {
     2：订单码-跳转模式
      * example: 1
      */
-    qr_pay_mode: string;
+    qr_pay_mode?: string;
 
     /**
      * 商户自定义二维码宽度
     注：qr_pay_mode=4时该参数生效
      * example: 100
      */
-    qrcode_width: number;
+    qrcode_width?: number;
 
     /**
      * 描述结算信息，json格式，详见结算参数说明
@@ -323,20 +323,20 @@ export class Request extends base.Request {
              * 结算汇总维度，按照这个维度汇总成批次结算，由商户指定。目前需要和结算收款方账户类型为cardAliasNo配合使用
              * example: A0001
              */
-            summary_dimension: string;
+            summary_dimension?: string;
 
             /**
              * 结算主体标识。当结算主体类型为SecondMerchant时，为二级商户的SecondMerchantID；当结算主体类型为Store时，为门店的外标。
              * example: 2088xxxxx;ST_0001
              */
-            settle_entity_id: string;
+            settle_entity_id?: string;
 
             /**
              * 结算主体类型。
             二级商户:SecondMerchant;商户或者直连商户门店:Store
              * example: SecondMerchant、Store
              */
-            settle_entity_type: string;
+            settle_entity_type?: string;
 
 
 
@@ -401,7 +401,7 @@ export class Request extends base.Request {
         当传入商户签约号external_agreement_no时，场景不能为默认值DEFAULT|DEFAULT。
          * example: INDUSTRY|CARRENTAL
          */
-        sign_scene: string;
+        sign_scene?: string;
 
         /**
          * 商户签约号，代扣协议中标示用户的唯一签约号（确保在商户系统中唯一）。
@@ -409,13 +409,13 @@ export class Request extends base.Request {
         商户系统按需传入，如果同一用户在同一产品码、同一签约场景下，签订了多份代扣协议，那么需要指定并传入该值。
          * example: test
          */
-        external_agreement_no: string;
+        external_agreement_no?: string;
 
         /**
          * 用户在商户网站的登录账号，用于在签约页面展示，如果为空，则不展示
          * example: 13852852877
          */
-        external_logon_id: string;
+        external_logon_id?: string;
 
         /**
          * 当前用户签约请求的协议有效周期。
@@ -426,7 +426,7 @@ export class Request extends base.Request {
         如果未传入，默认为长期有效。
          * example: 2m
          */
-        sign_validity_period: string;
+        sign_validity_period?: string;
 
         /**
          * 签约第三方主体类型。对于三方协议，表示当前用户和哪一类的第三方主体进行签约。
@@ -436,19 +436,25 @@ export class Request extends base.Request {
         默认为PARTNER。
          * example: PARTNER
          */
-        third_party_type: string;
+        third_party_type?: string;
 
         /**
          * 商户在芝麻端申请的appId
          * example: 1001164
          */
-        buckle_app_id: string;
+        buckle_app_id?: string;
 
         /**
          * 商户在芝麻端申请的merchantId
          * example: 268820000000414397785
          */
-        buckle_merchant_id: string;
+        buckle_merchant_id?: string;
+
+        /**
+         * 签约营销参数，此值为json格式；具体的key需与营销约定
+         * example: {"key","value"}
+         */
+        promo_params?: string;
     }
 
     /**
@@ -459,19 +465,19 @@ export class Request extends base.Request {
     默认值为PCWEB。
      * example: PCWEB
      */
-    integration_type: string;
+    integration_type?: string;
 
     /**
      * 请求来源地址。如果使用ALIAPP的集成方式，用户中途取消支付会返回该地址。
      * example: https://
      */
-    request_from_url: string;
+    request_from_url?: string;
 
     /**
      * 商户传入业务信息，具体值要和支付宝约定，应用于安全，营销等参数直传场景，格式为json格式
      * example: {"data":"123"}
      */
-    business_params: string;
+    business_params?: string;
 
     /**
      * 外部指定买家
@@ -483,28 +489,28 @@ export class Request extends base.Request {
          * 注： need_check_info=T时该参数才有效
          * example: 李明
          */
-        name: string;
+        name?: string;
 
         /**
          * 手机号
         注：该参数暂不校验
          * example: 16587658765
          */
-        mobile: string;
+        mobile?: string;
 
         /**
          * 身份证：IDENTITY_CARD、护照：PASSPORT、军官证：OFFICER_CARD、士兵证：SOLDIER_CARD、户口本：HOKOU等。如有其它类型需要支持，请与蚂蚁金服工作人员联系。
          * 注： need_check_info=T时该参数才有效
          * example: IDENTITY_CARD
          */
-        cert_type: string;
+        cert_type?: string;
 
         /**
          * 证件号
          * 注：need_check_info=T时该参数才有效
          * example: 362334768769238881
          */
-        cert_no: string;
+        cert_no?: string;
 
         /**
          * 允许的最小买家年龄，买家年龄必须大于等于所传数值 
@@ -513,21 +519,21 @@ export class Request extends base.Request {
         2. min_age为整数，必须大于等于0
          * example: 18
          */
-        min_age: string;
+        min_age?: string;
 
         /**
          * 是否强制校验付款人身份信息
         T:强制校验，F：不强制
          * example: F
          */
-        fix_buyer: string;
+        fix_buyer?: string;
 
         /**
          * 是否强制校验身份信息
         T:强制校验，F：不强制
          * example: F
          */
-        need_check_info: string;
+        need_check_info?: string;
     }
 
 }

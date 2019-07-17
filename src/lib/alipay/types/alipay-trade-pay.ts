@@ -26,7 +26,7 @@ export class Request extends base.Request {
      * 销售产品码
      * example: FACE_TO_FACE_PAYMENT
      */
-    product_code: string;
+    product_code?: string;
 
     /**
      * 订单标题
@@ -38,13 +38,13 @@ export class Request extends base.Request {
      * 买家的支付宝用户id，如果为空，会从传入了码值信息中获取买家ID
      * example: 2088202954065786
      */
-    buyer_id: string;
+    buyer_id?: string;
 
     /**
      * 如果该值为空，则默认为商户签约账号对应的支付宝用户ID
      * example: 2088102146225135
      */
-    seller_id: string;
+    seller_id?: string;
 
     /**
      * 订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
@@ -52,32 +52,32 @@ export class Request extends base.Request {
     如果同时传入了【可打折金额】，【不可打折金额】，【订单总金额】三者，则必须满足如下条件：【订单总金额】=【可打折金额】+【不可打折金额】
      * example: 88.88
      */
-    total_amount: number;
+    total_amount?: number;
 
     /**
      * 标价币种,  total_amount 对应的币种单位。支持英镑：GBP、港币：HKD、美元：USD、新加坡元：SGD、日元：JPY、加拿大元：CAD、澳元：AUD、欧元：EUR、新西兰元：NZD、韩元：KRW、泰铢：THB、瑞士法郎：CHF、瑞典克朗：SEK、丹麦克朗：DKK、挪威克朗：NOK、马来西亚林吉特：MYR、印尼卢比：IDR、菲律宾比索：PHP、毛里求斯卢比：MUR、以色列新谢克尔：ILS、斯里兰卡卢比：LKR、俄罗斯卢布：RUB、阿联酋迪拉姆：AED、捷克克朗：CZK、南非兰特：ZAR、人民币：CNY
      * example: USD
      */
-    trans_currency: string;
+    trans_currency?: string;
 
     /**
      * 商户指定的结算币种，支持英镑：GBP、港币：HKD、美元：USD、新加坡元：SGD、日元：JPY、加拿大元：CAD、澳元：AUD、欧元：EUR、新西兰元：NZD、韩元：KRW、泰铢：THB、瑞士法郎：CHF、瑞典克朗：SEK、丹麦克朗：DKK、挪威克朗：NOK、马来西亚林吉特：MYR、印尼卢比：IDR、菲律宾比索：PHP、毛里求斯卢比：MUR、以色列新谢克尔：ILS、斯里兰卡卢比：LKR、俄罗斯卢布：RUB、阿联酋迪拉姆：AED、捷克克朗：CZK、南非兰特：ZAR、人民币：CNY
      * example: USD
      */
-    settle_currency: string;
+    settle_currency?: string;
 
     /**
      * 参与优惠计算的金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]。
     如果该值未传入，但传入了【订单总金额】和【不可打折金额】，则该值默认为【订单总金额】-【不可打折金额】
      * example: 8.88
      */
-    discountable_amount: number;
+    discountable_amount?: number;
 
     /**
      * 订单描述
      * example: Iphone6 16G
      */
-    body: string;
+    body?: string;
 
     /**
      * 订单包含的商品列表信息，json格式，其它说明详见商品明细说明
@@ -112,44 +112,44 @@ export class Request extends base.Request {
          * 商品类目
          * example: 34543238
          */
-        goods_category: string;
+        goods_category?: string;
 
         /**
          * 商品类目树，从商品类目根节点到叶子节点的类目id组成，类目id值使用|分割
          * example: 124868003|126232002|126252004
          */
-        categories_tree: string;
+        categories_tree?: string;
 
         /**
          * 商品描述信息
          * example: 特价手机
          */
-        body: string;
+        body?: string;
 
         /**
          * 商品的展示地址
          * example: http://www.alipay.com/xxx.jpg
          */
-        show_url: string;
+        show_url?: string;
     }[]
 
     /**
      * 商户操作员编号
      * example: yx_001
      */
-    operator_id: string;
+    operator_id?: string;
 
     /**
      * 商户门店编号
      * example: NJ_001
      */
-    store_id: string;
+    store_id?: string;
 
     /**
      * 商户机具终端编号
      * example: NJ_T_001
      */
-    terminal_id: string;
+    terminal_id?: string;
 
     /**
      * 业务扩展参数
@@ -161,39 +161,39 @@ export class Request extends base.Request {
         该参数作为系统商返佣数据提取的依据，请填写系统商签约协议的PID
          * example: 2088511833207846
          */
-        sys_service_provider_id: string;
+        sys_service_provider_id?: string;
 
         /**
          * 行业数据回流信息, 详见：地铁支付接口参数补充说明
          * example: {\"scene_code\":\"metro_tradeorder\",\"channel\":\"xxxx\",\"scene_data\":{\"asset_name\":\"ALIPAY\"}}
          */
-        industry_reflux_info: string;
+        industry_reflux_info?: string;
 
         /**
          * 卡类型
          * example: S0JP0000
          */
-        card_type: string;
+        card_type?: string;
     }
 
     /**
      * 该笔订单允许的最晚付款时间，逾期将关闭交易。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。 该参数数值不接受小数点， 如 1.5h，可转换为 90m
      * example: 90m
      */
-    timeout_express: string;
+    timeout_express?: string;
 
     /**
      * 预授权确认模式，授权转交易请求中传入，适用于预授权转交易业务使用，目前只支持PRE_AUTH(预授权产品码)
     COMPLETE：转交易支付完成结束预授权，解冻剩余金额; NOT_COMPLETE：转交易支付完成不结束预授权，不解冻剩余金额
      * example: COMPLETE：转交易支付完成结束预授权;NOT_COMPLETE：转交易支付完成不结束预授权
      */
-    auth_confirm_mode: string;
+    auth_confirm_mode?: string;
 
     /**
      * 商户传入终端设备相关信息，具体值要和支付宝约定
      * example: {"key":"value"}
      */
-    terminal_params: string;
+    terminal_params?: string;
 
     /**
      * 优惠明细参数，通过此属性补充营销参数
@@ -204,14 +204,14 @@ export class Request extends base.Request {
          * 存在延迟扣款这一类的场景，用这个时间表明用户发生交易的时间，比如说，在公交地铁场景，用户刷码出站的时间，和商户上送交易的时间是不一样的。
          * example: 2018-09-25 22:47:33
          */
-        actual_order_time: string;
+        actual_order_time?: string;
     }
 
     /**
      * 支付模式类型,若值为ENJOY_PAY_V2表示当前交易允许走先享后付2.0垫资
      * example: ENJOY_PAY_V2
      */
-    advance_payment_type: string;
+    advance_payment_type?: string;
 
 }
 
@@ -239,31 +239,31 @@ export class Response extends base.Response {
      * 结算币种订单金额
      * example: 88.88
      */
-    settle_amount: string;
+    settle_amount?: string;
 
     /**
      * 支付币种
      * example: CNY
      */
-    pay_currency: string;
+    pay_currency?: string;
 
     /**
      * 支付币种订单金额
      * example: 580.04
      */
-    pay_amount: string;
+    pay_amount?: string;
 
     /**
      * 结算币种兑换标价币种汇率
      * example: 1
      */
-    settle_trans_rate: string;
+    settle_trans_rate?: string;
 
     /**
      * 标价币种兑换支付币种汇率
      * example: 6.5261
      */
-    trans_pay_rate: string;
+    trans_pay_rate?: string;
 
     /**
      * 交易金额
@@ -275,13 +275,13 @@ export class Response extends base.Response {
      * 标价币种, total_amount对应的币种单位。目前支持英镑：GBP、港币：HKD、美元：USD、新加坡元：SGD、日元：JPY、加拿大元：CAD、澳元：AUD、欧元：EUR、新西兰元：NZD、韩元：KRW、泰铢：THB、瑞士法郎：CHF、瑞典克朗：SEK、丹麦克朗：DKK、挪威克朗：NOK、马来西亚林吉特：MYR、印尼卢比：IDR、菲律宾比索：PHP、毛里求斯卢比：MUR、以色列新谢克尔：ILS、斯里兰卡卢比：LKR、俄罗斯卢布：RUB、阿联酋迪拉姆：AED、捷克克朗：CZK、南非兰特：ZAR、人民币：CNY
      * example: USD
      */
-    trans_currency: string;
+    trans_currency?: string;
 
     /**
      * 商户指定的结算币种，目前支持英镑：GBP、港币：HKD、美元：USD、新加坡元：SGD、日元：JPY、加拿大元：CAD、澳元：AUD、欧元：EUR、新西兰元：NZD、韩元：KRW、泰铢：THB、瑞士法郎：CHF、瑞典克朗：SEK、丹麦克朗：DKK、挪威克朗：NOK、马来西亚林吉特：MYR、印尼卢比：IDR、菲律宾比索：PHP、毛里求斯卢比：MUR、以色列新谢克尔：ILS、斯里兰卡卢比：LKR、俄罗斯卢布：RUB、阿联酋迪拉姆：AED、捷克克朗：CZK、南非兰特：ZAR、人民币：CNY
      * example: USD
      */
-    settle_currency: string;
+    settle_currency?: string;
 
     /**
      * 实收金额
@@ -293,19 +293,19 @@ export class Response extends base.Response {
      * 买家付款的金额
      * example: 8.88
      */
-    buyer_pay_amount: number;
+    buyer_pay_amount?: number;
 
     /**
      * 使用集分宝付款的金额
      * example: 8.12
      */
-    point_amount: number;
+    point_amount?: number;
 
     /**
      * 交易中可给用户开具发票的金额
      * example: 12.50
      */
-    invoice_amount: number;
+    invoice_amount?: number;
 
     /**
      * 交易支付时间
@@ -328,7 +328,7 @@ export class Response extends base.Response {
          * 银行卡支付时的银行代码
          * example: CEB
          */
-        bank_code: string;
+        bank_code?: string;
 
         /**
          * 该支付工具类型所使用的金额
@@ -340,20 +340,20 @@ export class Response extends base.Response {
          * 渠道实际付款金额
          * example: 11.21
          */
-        real_amount: number;
+        real_amount?: number;
     }
 
     /**
      * 支付宝卡余额
      * example: 98.23
      */
-    card_balance: number;
+    card_balance?: number;
 
     /**
      * 发生支付交易的商户门店名称
      * example: 证大五道口店
      */
-    store_name: string;
+    store_name?: string;
 
     /**
      * 买家在支付宝的用户id
@@ -404,50 +404,50 @@ export class Response extends base.Response {
          * 商家出资（特指发起交易的商家出资金额）
          * example: 9.00
          */
-        merchant_contribute: number;
+        merchant_contribute?: number;
 
         /**
          * 其他出资方出资金额，可能是支付宝，可能是品牌商，或者其他方，也可能是他们的一起出资
          * example: 1.00
          */
-        other_contribute: number;
+        other_contribute?: number;
 
         /**
          * 优惠券备注信息
          * example: 学生专用优惠
          */
-        memo: string;
+        memo?: string;
 
         /**
          * 券模板id
          * example: 20171030000730015359000EMZP0
          */
-        template_id: string;
+        template_id?: string;
 
         /**
          * 如果使用的这张券是用户购买的，则该字段代表用户在购买这张券时用户实际付款的金额
          * example: 2.01
          */
-        purchase_buyer_contribute: number;
+        purchase_buyer_contribute?: number;
 
         /**
          * 如果使用的这张券是用户购买的，则该字段代表用户在购买这张券时商户优惠的金额
          * example: 1.03
          */
-        purchase_merchant_contribute: number;
+        purchase_merchant_contribute?: number;
 
         /**
          * 如果使用的这张券是用户购买的，则该字段代表用户在购买这张券时平台优惠的金额
          * example: 0.82
          */
-        purchase_ant_contribute: number;
+        purchase_ant_contribute?: number;
     }
 
     /**
      * 先享后付2.0垫资金额,不返回表示没有走垫资，非空表示垫资支付的金额
      * example: 88.8
      */
-    advance_amount: string;
+    advance_amount?: string;
 
     /**
      * 预授权支付模式，该参数仅在信用预授权支付场景下返回。信用预授权支付：CREDIT_PREAUTH_PAY
@@ -460,7 +460,7 @@ export class Response extends base.Response {
     默认不返回该信息，需与支付宝约定后配置返回；
      * example: 8.88
      */
-    charge_amount: string;
+    charge_amount?: string;
 
     /**
      * 费率活动标识，当交易享受活动优惠费率时，返回该活动的标识；
@@ -469,14 +469,14 @@ export class Response extends base.Response {
     蓝海活动标识：bluesea_1
      * example: bluesea_1
      */
-    charge_flags: string;
+    charge_flags?: string;
 
     /**
      * 支付清算编号，用于清算对账使用；
     只在银行间联交易场景下返回该信息；
      * example: 2018101610032004620239146945
      */
-    settlement_id: string;
+    settlement_id?: string;
 
     /**
      * 商户传入业务信息，具体值要和支付宝约定
@@ -484,25 +484,25 @@ export class Response extends base.Response {
     格式为json格式
      * example: {"data":"123"}
      */
-    business_params: string;
+    business_params?: string;
 
     /**
      * 买家用户类型。CORPORATE:企业用户；PRIVATE:个人用户。
      * example: PRIVATE
      */
-    buyer_user_type: string;
+    buyer_user_type?: string;
 
     /**
      * 商家优惠金额
      * example: 88.88
      */
-    mdiscount_amount: string;
+    mdiscount_amount?: string;
 
     /**
      * 平台优惠金额
      * example: 88.88
      */
-    discount_amount: string;
+    discount_amount?: string;
 
     /**
      * 买家名称；
@@ -510,7 +510,7 @@ export class Response extends base.Response {
     默认不返回该信息，需与支付宝约定后配置返回；
      * example: 菜鸟网络有限公司
      */
-    buyer_user_name: string;
+    buyer_user_name?: string;
 
 }
 
