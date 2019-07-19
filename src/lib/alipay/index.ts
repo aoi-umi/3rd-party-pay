@@ -99,7 +99,7 @@ export class AliPay extends AliPayBase {
         });
     }
 
-    appPay(data: appPay.Request, pubReq: Partial<RequestBase>) {
+    appPay(data: appPay.Request, pubReq?: Partial<RequestBase>) {
         return AliPayStatic.getSignObj(data, {
             ...this.getSignOpt(),
             ...pubReq,
@@ -107,35 +107,35 @@ export class AliPay extends AliPayBase {
         });
     }
 
-    async cancel(data: cancel.Request, pubReq: Partial<RequestBase>) {
+    async cancel(data: cancel.Request, pubReq?: Partial<RequestBase>) {
         return this.request<cancel.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeCancel,
         });
     }
 
-    async close(data: close.Request, pubReq: Partial<RequestBase>) {
+    async close(data: close.Request, pubReq?: Partial<RequestBase>) {
         return this.request<close.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeClose,
         });
     }
 
-    async create(data: create.Request, pubReq: Partial<RequestBase>) {
+    async create(data: create.Request, pubReq?: Partial<RequestBase>) {
         return this.request<create.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeCreate,
         });
     }
 
-    async fastpayRefundQuery(data: fastpayRefundQuery.Request, pubReq: Partial<RequestBase>) {
+    async fastpayRefundQuery(data: fastpayRefundQuery.Request, pubReq?: Partial<RequestBase>) {
         return this.request<fastpayRefundQuery.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeFastpayRefundQuery,
         });
     }
 
-    pagePay(data: pagePay.Request, pubReq: Partial<RequestBase>) {
+    pagePay(data: pagePay.Request, pubReq?: Partial<RequestBase>) {
         return AliPayStatic.getSignObj({
             product_code: 'FAST_INSTANT_TRADE_PAY',
             ...data
@@ -148,7 +148,7 @@ export class AliPay extends AliPayBase {
     }
 
     //方法名不存在
-    private pageRefund(data: pageRefund.Request, pubReq: Partial<RequestBase>) {
+    private pageRefund(data: pageRefund.Request, pubReq?: Partial<RequestBase>) {
         return AliPayStatic.getSignObj(data, {
             ...this.getSignOpt(),
             ...pubReq,
@@ -157,35 +157,35 @@ export class AliPay extends AliPayBase {
         });
     }
 
-    precreate(data: precreate.Request, pubReq: Partial<RequestBase>) {
+    precreate(data: precreate.Request, pubReq?: Partial<RequestBase>) {
         return this.request<precreate.Response>(data, {
             ...pubReq,
             method: Method.alipayTradePrecreate,
         });
     }
 
-    async query(data: query.Request, pubReq: Partial<RequestBase>) {
+    async query(data: query.Request, pubReq?: Partial<RequestBase>) {
         return this.request<query.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeQuery,
         });
     }
 
-    async refund(data: refund.Request, pubReq: Partial<RequestBase>) {
+    async refund(data: refund.Request, pubReq?: Partial<RequestBase>) {
         return this.request<refund.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeRefund,
         });
     }
 
-    async orderSettle(data: orderSettle.Request, pubReq: Partial<RequestBase>) {
+    async orderSettle(data: orderSettle.Request, pubReq?: Partial<RequestBase>) {
         return this.request<orderSettle.Response>(data, {
             ...pubReq,
             method: Method.alipayTradeOrderSettle,
         });
     }
 
-    wapPay(data: wapPay.Request, pubReq: Partial<RequestBase>) {
+    wapPay(data: wapPay.Request, pubReq?: Partial<RequestBase>) {
         return AliPayStatic.getSignObj(data, {
             ...this.getSignOpt(),
             ...pubReq,
