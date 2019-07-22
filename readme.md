@@ -2,7 +2,7 @@
 
 > import { wxpay, alipay } from "3rd-party-pay";
 
-> 可选配置
+[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
 ```ts
 wxpay.WxPayStatic.config({
@@ -14,35 +14,51 @@ wxpay.WxPayStatic.config({
   sandboxHost: "",
   //记录请求
   requestLog: log => {
-    console.log(log);
+    console.log("wx", log);
   }
 });
-```
 
-```ts
 let wxpayInst = new wxpay.WxPay({
   mch_id: "商户号",
   key: "密钥",
   appid: "公众账号ID",
   pfxPath: "证书路径"
 });
-```
 
-[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
-
-> wxpayInst.orderQuery({ transaction_id: "单号" });
-
-```ts
-let alipayInst = new alipay.AliPay({
-  app_id: "应用ID",
-  rsaPrivatePath: "rsa私钥",
-  rsaPublicPath: "rsa公钥"
+//统一下单
+wxpayInst.unifiedOrder({
+  body: "test",
+  out_trade_no: "单号",
+  total_fee: 1, //金额
+  spbill_create_ip: "127.0.0.1",
+  trade_type: wxpay.TradeType.Native,
+  notify_url: "通知订单"
 });
+
+//查询订单
+wxpayInst.orderQuery({ out_trade_no: "单号", transaction_id: "wx单号" });
 ```
 
 [阿里支付文档](https://docs.open.alipay.com/api_1/alipay.trade.page.pay/)
 
 ```ts
+alipay.AliPayStatic.config({
+  sandbox: true,
+  host: "",
+  sandboxHost: "",
+  sign_type: "RSA2",
+  requestLog: log => {
+    console.log("ali", log);
+  }
+});
+
+let alipayInst = new alipay.AliPay({
+  app_id: "应用ID",
+  notify_url: "通知地址",
+  rsaPrivatePath: "rsa私钥",
+  rsaPublicPath: "rsa公钥"
+});
+
 let url = alipayInst.pagePay(
   {
     out_trade_no: "单号",
