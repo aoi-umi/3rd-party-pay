@@ -13,7 +13,7 @@ export class Request extends base.Request {
     注：目前仅支持FAST_INSTANT_TRADE_PAY
      * example: FAST_INSTANT_TRADE_PAY
      */
-    product_code: string;
+    product_code?: string;
 
     /**
      * 订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]。
@@ -153,7 +153,7 @@ export class Request extends base.Request {
      * 签约营销参数，此值为json格式；具体的key需与营销约定
      * example: {"key","value"}
      */
-    promo_params: string;
+    promo_params?: string;
 
     /**
      * 描述分账信息，json格式，详见分账参数说明

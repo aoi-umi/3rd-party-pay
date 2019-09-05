@@ -39,7 +39,8 @@ wxpayInst.unifiedOrder({
 wxpayInst.orderQuery({ out_trade_no: "单号", transaction_id: "wx单号" });
 ```
 
-[阿里支付文档](https://docs.open.alipay.com/api_1/alipay.trade.page.pay/)
+[阿里支付文档](https://docs.open.alipay.com/api_1/alipay.trade.page.pay/)  
+秘钥使用 PKCS8(JAVA适用) 格式
 
 ```ts
 alipay.AliPayStatic.config({
