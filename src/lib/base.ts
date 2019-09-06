@@ -25,7 +25,7 @@ export abstract class PayStatic {
     }
 
     static requestLog(log: RequestLog) {
-        console.log(log);
+        console.log(JSON.stringify(log));
     }
 
     static config(opt: PayStaticConfig) {
