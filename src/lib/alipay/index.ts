@@ -34,7 +34,14 @@ export class AliPay extends AliPayBase {
         this.rsaPrivatePath = opt.rsaPrivatePath;
         this.rsaPublicPath = opt.rsaPublicPath;
         this.rsaPrivate = fs.readFileSync(this.rsaPrivatePath, 'utf-8');
+        let priTag = '-----BEGIN PRIVATE KEY-----'
+        if (!this.rsaPrivate.includes(priTag))
+            this.rsaPrivate = [priTag, this.rsaPrivate, '-----END PRIVATE KEY-----'].join('\r\n');
+
         this.rsaPublic = fs.readFileSync(this.rsaPublicPath, 'utf-8');
+        let pubTag = '-----BEGIN PUBLIC KEY-----'
+        if (!this.rsaPublic.includes(pubTag))
+            this.rsaPublic = [pubTag, this.rsaPublic, '-----END PUBLIC KEY-----'].join('\r\n');
     }
 
     getSignOpt() {

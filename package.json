@@ -1,6 +1,6 @@
 {
   "name": "3rd-party-pay",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "dest/lib/index.js",
   "files": [
