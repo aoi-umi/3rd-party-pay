@@ -286,7 +286,7 @@ export class AliPayStatic extends PayStatic {
 
             let rs = await utils.request(reqData);
             let data = rs.data;
-            log.orginRes = data;
+            log.orginRes = { ...data };
             if (opt.originalResult)
                 return data as T;
             data = opt.resDataKey ? data[opt.resDataKey] : data;
