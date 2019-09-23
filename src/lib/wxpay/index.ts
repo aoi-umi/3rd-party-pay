@@ -124,7 +124,7 @@ export class WxPay extends WxPayBase {
         return xmlRs;
     }
 
-    async payNotifyHandler(req: string | payNotify.Request, fn: (req: payNotify.Request) => payNotify.Response) {
+    async payNotifyHandler(req: string | payNotify.Request, fn: (req: payNotify.Request) => (payNotify.Response | void) | Promise<payNotify.Response | void>) {
         return this.notifyHandler(req, async (data) => {
             return await fn(data);
         });
