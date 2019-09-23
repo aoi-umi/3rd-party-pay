@@ -213,14 +213,22 @@ export const Path = {
     //#endregion
 
 };
-export class WxPayBase {
+export class WxPaySignOption {
     mch_id: string;
     appid: string;
     key: string;
-    pfxPath?: string;
-    pfx?: any;
 }
 
+export class WxPayBase extends WxPaySignOption {
+    pfxPath?: string;
+    pfx?: any;
+    payNotifyUrl: string;
+}
+
+type SignOptions = {
+    key?: string;
+    encrypt?: string;
+};
 export class WxPayStatic extends PayStatic {
     static success = 'SUCCESS';
     static host = 'https://api.mch.weixin.qq.com';
@@ -313,26 +321,22 @@ export class WxPayStatic extends PayStatic {
     }
 
     //沙箱获取key接口
-    static async getsignkey(data: { mch_id: string; }) {
+    static async getsignkey(data: { mch_id: string, }, opt: SignOptions) {
         let signObj = {
             mch_id: data.mch_id,
             nonce_str: utils.randomString(),
         };
-        signObj['sign'] = this.createSign(signObj);
+        signObj['sign'] = this.createSign(signObj, opt);
         let rs = await this.request<ResponseBase & {
             mch_id: string;
             sandbox_signkey: string;
         }>({ path: Path.getSignKey, data: signObj });
-
         this.errorHandler(rs as any);
 
         return rs;
     }
 
-    static createSign(signObj: any, opt?: {
-        key?: string;
-        encrypt?: string;
-    }) {
+    static createSign(signObj: any, opt?: SignOptions) {
         opt = { ...opt };
         let signStr = this.stringify(signObj, opt.key);
         let sign = this.encrypt(signStr, opt.encrypt as any, opt.key);
@@ -347,7 +351,7 @@ export class WxPayStatic extends PayStatic {
         return signStr;
     }
 
-    static async getSignObj(data, opt: WxPayBase & { mch?: boolean }) {
+    static async getSignObj(data, opt: WxPaySignOption & { mch?: boolean }) {
         let key = opt.key;
         let obj = utils.clone(data) as Sign & {
             mch_id?: string; appid?: string;
@@ -367,6 +371,8 @@ export class WxPayStatic extends PayStatic {
         if (this.sandbox) {
             let rs = await this.getsignkey({
                 mch_id: opt.mch_id,
+            }, {
+                key
             });
             key = rs.sandbox_signkey;
         }

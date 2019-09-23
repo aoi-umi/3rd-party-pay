@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 
+import * as utils from '../utils';
+import { RequestLog, PayStatic } from '../base';
 export * from './base';
-import { WxPayStatic, WxPayBase as WxPayBase, Path, SignType, BillType, ResponseBase } from './base';
+import { WxPayStatic, WxPayBase, Path, SignType, BillType, ResponseBase } from './base';
 //#region 支付接口 
 import * as unifiedOrder from './types/unified-order';
 import * as orderQuery from './types/order-query';
@@ -23,7 +25,6 @@ import * as downloadFundflow from './types/download-fundflow';
 
 import * as transfers from './types/transfers';
 import * as getTransferInfo from './types/get-transfer-info';
-import { RequestLog, PayStatic } from '../base';
 //#endregion
 
 export class WxPay extends WxPayBase {
@@ -33,6 +34,7 @@ export class WxPay extends WxPayBase {
         this.appid = opt.appid;
         this.key = opt.key;
         this.pfxPath = opt.pfxPath;
+        this.payNotifyUrl = opt.payNotifyUrl;
         this.pfx = fs.readFileSync(this.pfxPath);
     }
 
@@ -47,7 +49,7 @@ export class WxPay extends WxPayBase {
     //#region 支付接口 
 
     async unifiedOrder(data: unifiedOrder.Request) {
-        let obj = await WxPayStatic.getSignObj(data, this.signOpt());
+        let obj = await WxPayStatic.getSignObj(utils.extend({ notify_url: this.payNotifyUrl }, data), this.signOpt());
         let rs = await WxPayStatic.request<unifiedOrder.Response>({ path: Path.unifiedOrder, data: obj });
         return rs;
     }

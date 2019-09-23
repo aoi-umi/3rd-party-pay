@@ -85,7 +85,7 @@ export class Request extends base.Request {
      * 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
      * example: http://www.weixin.qq.com/wxpay/pay.php
      */
-    notify_url: string;
+    notify_url?: string;
 
     /**
      * 交易类型
