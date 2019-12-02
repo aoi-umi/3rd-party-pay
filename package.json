@@ -10,11 +10,13 @@
     "axios": "^0.19.0",
     "cheerio": "^1.0.0-rc.3",
     "node-forge": "^0.8.5",
+    "paypal-rest-sdk": "^1.8.1",
     "q": "^1.5.1",
     "query-string": "^6.8.1",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@types/paypal-rest-sdk": "^1.7.5",
     "@types/q": "^1.5.2",
     "@types/xml2js": "^0.4.4",
     "eslint": "^5.16.0",

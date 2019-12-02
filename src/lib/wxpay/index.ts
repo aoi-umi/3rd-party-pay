@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
 import * as utils from '../utils';
-import { RequestLog, PayStatic } from '../base';
+import { RequestLog } from '../base';
 export * from './base';
 import { WxPayStatic, WxPayBase, Path, SignType, BillType, ResponseBase } from './base';
 //#region 支付接口 
