@@ -74,6 +74,7 @@ export class AliPay extends AliPayBase {
             }
             rs = await fn(req);
         } catch (e) {
+            console.log(req);
             console.error(e);
             log.success = false;
             rs = 'failure';

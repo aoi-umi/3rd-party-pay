@@ -42,3 +42,63 @@ export class PayPal extends PayPalBase {
         return rs;
     }
 }
+
+export class PayPalV2 extends PayPalBase {
+    constructor(opt: PayPalBase) {
+        super();
+        this.client_id = opt.client_id;
+        this.client_secret = opt.client_secret;
+        this.pay_return_url = opt.pay_return_url;
+        this.pay_cancel_url = opt.pay_cancel_url;
+    }
+
+    private token = '';
+    private tokenExpiresAt = 0;
+
+    private async getToken() {
+        if (this.tokenExpiresAt && this.tokenExpiresAt > Date.now())
+            return this.token;
+        let rs = await this.tokenCreate();
+        this.token = rs.access_token;
+        this.tokenExpiresAt = Date.now() + (rs.expires_in - 1) * 1000;
+        return this.token;
+    }
+
+    private async tokenCreate() {
+        return await PayPalStatic.requestV2({
+            data: 'grant_type=client_credentials',
+            path: '/v1/oauth2/token',
+            axiosOpt: {
+                headers: {
+                    Authorization: 'Basic ' + Buffer.from(this.client_id + ':' + this.client_secret).toString('base64'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+        });
+    }
+
+    private async request(opt: {
+        path: string;
+        method?: string;
+        data: any
+    }) {
+        let token = await this.getToken();
+        return await PayPalStatic.requestV2({
+            data: opt.data,
+            path: opt.path,
+            axiosOpt: {
+                method: opt.method as any,
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                }
+            }
+        });
+    }
+
+    async orderCreate(data) {
+        return this.request({
+            data,
+            path: '/v2/checkout/orders'
+        });
+    }
+}

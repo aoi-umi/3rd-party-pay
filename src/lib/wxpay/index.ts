@@ -105,6 +105,7 @@ export class WxPay extends WxPayBase {
             }
             rs = await fn(req);
         } catch (e) {
+            console.log(req);
             console.error(e);
             log.success = false;
             log.msg = e.message;

@@ -233,6 +233,8 @@ export class WxPayStatic extends PayStatic {
     static success = 'SUCCESS';
     static host = 'https://api.mch.weixin.qq.com';
     static sandboxHost = 'https://api.mch.weixin.qq.com/sandboxnew';
+    //沙箱固定金额
+    static sandboxFee = 101;
 
     static buildXml(data, root = false) {
         return xmlBuilder.buildObject(root ? data : { xml: data });

@@ -37,6 +37,8 @@
   "keywords": [
     "alipay",
     "wxpay",
+    "微信支付",
+    "支付宝",
     "typescript"
   ]
 }
