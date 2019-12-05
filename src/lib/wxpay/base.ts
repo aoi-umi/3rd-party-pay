@@ -386,9 +386,11 @@ export class WxPayStatic extends PayStatic {
     static encrypt(str: string, type: string, key?: string) {
         let encrypt = md.md5;
         let isHmac = false;
-        if (type == SignType.HMAC_SHA256) {
+        let hmac = /hmac-/;
+        if (hmac.test(type)) {
             encrypt = hmac;
             isHmac = true;
+            type = type.replace(hmac, '');
         }
         let en = encrypt.create();
         if (isHmac)
