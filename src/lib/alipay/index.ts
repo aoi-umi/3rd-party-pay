@@ -7,20 +7,20 @@ import { AliPayBase, AliPayStatic, Method, RequestBase, NotifyType } from './bas
 export * from './base';
 
 import * as notify from './types/alipay-notify';
-import * as appPay from './types/alipay-trade-app-pay';
-import * as cancel from './types/alipay-trade-cancel';
-import * as close from './types/alipay-trade-close';
-import * as create from './types/alipay-trade-create';
-import * as fastpayRefundQuery from './types/alipay-trade-fastpay-refund-query';
-import * as orderSettle from './types/alipay-trade-order-settle';
-import * as orderinfoSync from './types/alipay-trade-orderinfo-sync';
-import * as pagePay from './types/alipay-trade-page-pay';
-import * as pageRefund from './types/alipay-trade-page-refund';
-import * as pay from './types/alipay-trade-pay';
-import * as precreate from './types/alipay-trade-precreate';
-import * as query from './types/alipay-trade-query';
-import * as refund from './types/alipay-trade-refund';
-import * as wapPay from './types/alipay-trade-wap-pay';
+import * as appPay from './types/trade/alipay-trade-app-pay';
+import * as cancel from './types/trade/alipay-trade-cancel';
+import * as close from './types/trade/alipay-trade-close';
+import * as create from './types/trade/alipay-trade-create';
+import * as fastpayRefundQuery from './types/trade/alipay-trade-fastpay-refund-query';
+import * as orderSettle from './types/trade/alipay-trade-order-settle';
+import * as orderinfoSync from './types/trade/alipay-trade-orderinfo-sync';
+import * as pagePay from './types/trade/alipay-trade-page-pay';
+import * as pageRefund from './types/trade/alipay-trade-page-refund';
+import * as pay from './types/trade/alipay-trade-pay';
+import * as precreate from './types/trade/alipay-trade-precreate';
+import * as query from './types/trade/alipay-trade-query';
+import * as refund from './types/trade/alipay-trade-refund';
+import * as wapPay from './types/trade/alipay-trade-wap-pay';
 
 
 export class AliPay extends AliPayBase {

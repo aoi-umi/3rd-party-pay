@@ -24,8 +24,9 @@ const columnMap = {
     默认开启: 'enable'
 };
 
-let menu = {
+let tradeMenu = {
     "name": "支付API",
+    "slug": "api_1",
     "pages": [{
         "currentPath": "1", "depth": 1, "rootPath": "1", "slug": "alipay.trade.close", "title": "统一收单交易关闭接口"
     }, {
@@ -81,12 +82,47 @@ let menu = {
     }, {
         "currentPath": "27", "depth": 1, "rootPath": "27", "slug": "alipay.trade.order.settle", "title": "统一收单交易结算接口"
     }].filter(ele => ele.slug.startsWith('alipay.trade')),
-    "slug": "api_1"
+};
+let fundMenu = {
+    "name": "资金API",
+    "slug": "api_28",
+    pages: [{
+        "currentPath": "1", "depth": 1, "rootPath": "1", "slug": "alipay.fund.auth.operation.detail.query", "title": "资金授权操作查询接口"
+    }, {
+        "currentPath": "2", "depth": 1, "rootPath": "2", "slug": "alipay.fund.auth.operation.cancel", "title": "资金授权撤销接口"
+    }, {
+        "currentPath": "3", "depth": 1, "rootPath": "3", "slug": "alipay.fund.auth.order.freeze", "title": "资金授权冻结接口"
+    }, {
+        "currentPath": "4", "depth": 1, "rootPath": "4", "slug": "alipay.fund.auth.order.unfreeze", "title": "资金授权解冻接口"
+    }, {
+        "currentPath": "5", "depth": 1, "rootPath": "5", "slug": "alipay.fund.trans.toaccount.transfer", "title": "单笔转账到支付宝账户接口"
+    }, {
+        "currentPath": "6", "depth": 1, "rootPath": "6", "slug": "alipay.fund.trans.order.query", "title": "查询转账订单接口"
+    }, {
+        "currentPath": "7", "depth": 1, "rootPath": "7", "slug": "alipay.fund.trans.refund", "title": "资金退回接口"
+    }, {
+        "currentPath": "8", "depth": 1, "rootPath": "8", "slug": "alipay.fund.trans.app.pay", "title": "现金红包无线支付接口"
+    }, {
+        "currentPath": "9", "depth": 1, "rootPath": "9", "slug": "alipay.fund.auth.order.app.freeze", "title": "线上资金授权冻结接口"
+    }, {
+        "currentPath": "10", "depth": 1, "rootPath": "10", "slug": "alipay.fund.auth.order.voucher.create", "title": "资金授权发码接口"
+    }, {
+        "currentPath": "11", "depth": 1, "rootPath": "11", "slug": "alipay.fund.account.query", "title": "支付宝资金账户资产查询接口"
+    }, {
+        "currentPath": "12", "depth": 1, "rootPath": "12", "slug": "alipay.fund.batch.create", "title": "批次下单接口"
+    }, {
+        "currentPath": "13", "depth": 1, "rootPath": "13", "slug": "alipay.fund.batch.detail.query", "title": "批量代发明细统一查询接口"
+    }, {
+        "currentPath": "14", "depth": 1, "rootPath": "14", "slug": "alipay.fund.trans.common.query", "title": "转账业务单据查询接口"
+    }, {
+        "currentPath": "15", "depth": 1, "rootPath": "15", "slug": "alipay.fund.trans.uni.transfer", "title": "统一转账接口"
+    }].filter(ele => ele.slug.startsWith('alipay.fund.trans')),
 };
 let doc = 'https://docs.open.alipay.com';
 
 let dict = {
-    pay: menu,
+    pay: tradeMenu,
+    fund: fundMenu,
     notify: {
         slug: '',
         pages: [{
