@@ -135,8 +135,11 @@ let dict = {
 
 async function run() {
     for (let key in dict) {
+        if (!['fund'].includes(key))
+            continue;
         let menu = dict[key];
         let pages = menu.pages;
+        console.log(pages);
         for (let i = 0; i < pages.length; i++) {
             let page = pages[i];
             try {

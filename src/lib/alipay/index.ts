@@ -22,6 +22,8 @@ import * as query from './types/trade/alipay-trade-query';
 import * as refund from './types/trade/alipay-trade-refund';
 import * as wapPay from './types/trade/alipay-trade-wap-pay';
 
+import * as transToaccountTransfer from './types/fund/alipay-fund-trans-toaccount-transfer';
+
 
 export class AliPay extends AliPayBase {
     rsaPrivate: string;
@@ -148,11 +150,11 @@ export class AliPay extends AliPayBase {
             product_code: 'FAST_INSTANT_TRADE_PAY',
             ...data
         }, {
-                ...this.getSignOpt(),
-                ...pubReq,
-                method: Method.alipayTradePagePay,
-                withHost: true
-            });
+            ...this.getSignOpt(),
+            ...pubReq,
+            method: Method.alipayTradePagePay,
+            withHost: true
+        });
     }
 
     //方法名不存在
@@ -198,6 +200,13 @@ export class AliPay extends AliPayBase {
             ...this.getSignOpt(),
             ...pubReq,
             method: Method.alipayTradeWapPay,
+        });
+    }
+
+    async transToaccountTransfer(data: transToaccountTransfer.Request, pubReq?: Partial<RequestBase>) {
+        return this.request<create.Response>(data, {
+            ...pubReq,
+            method: Method.alipayFundTransToaccountTransfer,
         });
     }
 }

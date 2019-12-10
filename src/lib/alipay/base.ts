@@ -168,6 +168,9 @@ export const Method = {
 
     //https://docs.open.alipay.com/api_1/alipay.trade.wap.pay
     alipayTradeWapPay: 'alipay.trade.wap.pay',
+
+    //https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
+    alipayFundTransToaccountTransfer: 'alipay.fund.trans.toaccount.transfer',
 };
 
 export class AliPayBase {
@@ -315,3 +318,12 @@ export class AliPayStatic extends PayStatic {
         }
     }
 }
+
+/**
+ 1、ALIPAY_USERID：支付宝账号对应的支付宝唯一用户号。以2088开头的16位纯数字组成。
+ 2、ALIPAY_LOGONID：支付宝登录号，支持邮箱和手机号格式。
+ */
+export const PayeeType = {
+    AlipayUserId: 'ALIPAY_USERID',
+    AlipayLoginId: 'ALIPAY_LOGONID',
+};
