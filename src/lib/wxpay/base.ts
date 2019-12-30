@@ -436,3 +436,9 @@ export const CheckName = {
     不校验: 'NO_CHECK',
     强校验: 'FORCE_CHECK',
 };
+
+export const AccountType = {
+    基本账户: 'Basic',
+    运营账户: 'Operation',
+    手续费账户: 'Fees'
+};

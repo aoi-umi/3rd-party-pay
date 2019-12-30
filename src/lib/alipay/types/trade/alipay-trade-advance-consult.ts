@@ -97,31 +97,3 @@ export class Response extends base.Response {
     result_code: string;
 
 }
-
-export const error = {
-
-    SYSTEM_ERROR: {
-        code: 'SYSTEM_ERROR',
-        desc: '系统繁忙',
-        resolve: '稍后重试',
-    },
-
-    USER_STAUTS_ERROR: {
-        code: 'USER_STAUTS_ERROR',
-        desc: '用户状态错误',
-        resolve: '用户状态问题',
-    },
-
-    USER_NOT_EXIST: {
-        code: 'USER_NOT_EXIST',
-        desc: '用户已经注销',
-        resolve: '用户已经注销',
-    },
-
-    BUYER_NOT_SUPPORT_ADVANCEPAY: {
-        code: 'BUYER_NOT_SUPPORT_ADVANCEPAY',
-        desc: '用户不允许垫资',
-        resolve: '用户不允许垫资',
-    },
-
-}

@@ -248,31 +248,3 @@ export class Response extends base.Response {
     merchant_order_no: string;
 
 }
-
-export const notify = {
-
-    'tradeStatus.TRADE_CLOSED': {
-        code: 'tradeStatus.TRADE_CLOSED',
-        desc: '交易关闭',
-        enable: '1',
-    },
-
-    'tradeStatus.TRADE_FINISHED': {
-        code: 'tradeStatus.TRADE_FINISHED',
-        desc: '交易完结',
-        enable: '1',
-    },
-
-    'tradeStatus.TRADE_SUCCESS': {
-        code: 'tradeStatus.TRADE_SUCCESS',
-        desc: '支付成功',
-        enable: '1',
-    },
-
-    'tradeStatus.WAIT_BUYER_PAY': {
-        code: 'tradeStatus.WAIT_BUYER_PAY',
-        desc: '交易创建',
-        enable: '0',
-    },
-
-}

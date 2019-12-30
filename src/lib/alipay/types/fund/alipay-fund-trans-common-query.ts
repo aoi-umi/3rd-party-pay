@@ -132,31 +132,3 @@ export class Response extends base.Response {
     transfer_bill_info?: string;
 
 }
-
-export const error = {
-
-    ORDER_NOT_EXIST: {
-        code: 'ORDER_NOT_EXIST',
-        desc: '转账订单不存在',
-        resolve: '转账订单不存在的原因,可能是转账还在处理中,也可能是转账处理失败,导致转账订单没有落地。商户首先需要检查该订单号是否确实是自己发起的, 如果确认是自己发起的转账订单,请不要直接当作转账失败处理,请隔几分钟再尝试查询,或者通过相同的 out_biz_no 再次发起转账。如果误把还在转账处理中的订单直接当转账失败处理,商户自行承担因此而产生的所有损失。',
-    },
-
-    INVALID_PARAMETER: {
-        code: 'INVALID_PARAMETER',
-        desc: '参数有误参数有误',
-        resolve: '请参考接口文档确认传参是否正确',
-    },
-
-    SYSTEM_ERROR: {
-        code: 'SYSTEM_ERROR',
-        desc: '系统繁忙',
-        resolve: '支付宝系统处理异常，请稍后再试',
-    },
-
-    NO_ORDER_PERMISSION: {
-        code: 'NO_ORDER_PERMISSION',
-        desc: '当前操作用户没有该笔单据的操作权限',
-        resolve: '当前操作用户（requestUserId）与单据所属用户（partnerid）需要保持一致',
-    },
-
-}

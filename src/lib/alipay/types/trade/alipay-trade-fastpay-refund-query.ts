@@ -190,25 +190,3 @@ export class Response {
     present_refund_mdiscount_amount: string;
 
 }
-
-export const error = {
-
-    'ACQ.SYSTEM_ERROR': {
-        code: 'ACQ.SYSTEM_ERROR',
-        desc: '系统错误',
-        resolve: '重新发起请求',
-    },
-
-    'ACQ.INVALID_PARAMETER': {
-        code: 'ACQ.INVALID_PARAMETER',
-        desc: '参数无效',
-        resolve: '检查请求参数，修改后重新发起请求',
-    },
-
-    TRADE_NOT_EXIST: {
-        code: 'TRADE_NOT_EXIST',
-        desc: '查询退款的交易不存在',
-        resolve: '确认交易号是否为正确的支付宝交易号，修改后重新查询',
-    },
-
-}

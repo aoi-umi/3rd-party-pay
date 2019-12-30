@@ -265,25 +265,3 @@ export class Response extends base.Response {
     ext_infos: string;
 
 }
-
-export const error = {
-
-    'ACQ.SYSTEM_ERROR': {
-        code: 'ACQ.SYSTEM_ERROR',
-        desc: '系统错误',
-        resolve: '重新发起请求',
-    },
-
-    'ACQ.INVALID_PARAMETER': {
-        code: 'ACQ.INVALID_PARAMETER',
-        desc: '参数无效',
-        resolve: '检查请求参数，修改后重新发起请求',
-    },
-
-    'ACQ.TRADE_NOT_EXIST': {
-        code: 'ACQ.TRADE_NOT_EXIST',
-        desc: '查询的交易不存在',
-        resolve: '检查传入的交易号是否正确，修改后重新发起请求',
-    },
-
-}

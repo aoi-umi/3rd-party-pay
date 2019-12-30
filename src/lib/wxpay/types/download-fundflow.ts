@@ -30,9 +30,3 @@ export class Request extends base.Request {
 
 export class Response extends base.Response {
 }
-
-export const AccountType = {
-    基本账户: 'Basic',
-    运营账户: 'Operation',
-    手续费账户: 'Fees'
-};

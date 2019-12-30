@@ -58,31 +58,3 @@ export class Response extends base.Response {
     refund_settlement_id: string;
 
 }
-
-export const error = {
-
-    'AQC.SYSTEM_ERROR': {
-        code: 'AQC.SYSTEM_ERROR',
-        desc: '系统错误',
-        resolve: '请使用相同的参数再次调用',
-    },
-
-    'ACQ.INVALID_PARAMETER': {
-        code: 'ACQ.INVALID_PARAMETER',
-        desc: '参数无效',
-        resolve: '请求参数有错，重新检查请求后，再调用撤销',
-    },
-
-    'ACQ.SELLER_BALANCE_NOT_ENOUGH': {
-        code: 'ACQ.SELLER_BALANCE_NOT_ENOUGH',
-        desc: '商户的支付宝账户中无足够的资金进行撤销',
-        resolve: '商户支付宝账户充值后重新发起撤销即可',
-    },
-
-    'ACQ.REASON_TRADE_BEEN_FREEZEN': {
-        code: 'ACQ.REASON_TRADE_BEEN_FREEZEN',
-        desc: '当前交易被冻结，不允许进行撤销',
-        resolve: '联系支付宝小二，确认该笔交易的具体情况',
-    },
-
-}

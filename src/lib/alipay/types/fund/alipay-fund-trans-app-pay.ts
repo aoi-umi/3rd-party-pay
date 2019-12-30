@@ -89,19 +89,3 @@ export class Response extends base.Response {
     status?: string;
 
 }
-
-export const error = {
-
-    INVALID_PARAMETER: {
-        code: 'INVALID_PARAMETER',
-        desc: '参数有误参数有误',
-        resolve: '参数校验失败',
-    },
-
-    PAYEE_NOT_EXIST: {
-        code: 'PAYEE_NOT_EXIST',
-        desc: '收款方不存在',
-        resolve: '收款方不存在',
-    },
-
-}
